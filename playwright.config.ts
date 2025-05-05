@@ -23,12 +23,12 @@ export default defineConfig({
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: 'html',
 
-  globalSetup: require.resolve('./init/global-setup.ts'),
+  globalSetup: require.resolve('./utils/global-setup.ts'),
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Base URL to use in actions like `await page.goto('/')`. */
     // baseURL: 'http://127.0.0.1:3000',
-    baseURL: process.env.BASE_URL || 'http://localhost:9000',
+    baseURL: process.env.BASE_URL || 'http://theia.artemis.cit.tum.de',
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
