@@ -8,4 +8,5 @@ node_modules/
 /tests-example/
 
 # For Local Development
-*.env
+/.auth/
+playwright.env
