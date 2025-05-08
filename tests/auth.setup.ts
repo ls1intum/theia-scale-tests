@@ -15,9 +15,7 @@ setup('authenticate', async ({ page }) => {
   const landingPage = new LandingPage(page);
   await landingPage.login(process.env.KEYCLOAK_USER || '', process.env.KEYCLOAK_PWD || '');
 
-  //await page.waitForURL(`${process.env.BASE_URL}/`);
-
-  //await expect(page.getByRole('button', { name: 'View profile and more' })).toBeVisible();
+  await page.waitForURL(`${process.env.BASE_URL}/`);
 
   await page.context().storageState({ path: authFile });
 });
