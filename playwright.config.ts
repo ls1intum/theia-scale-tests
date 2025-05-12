@@ -49,6 +49,15 @@ export default defineConfig({
       dependencies: ['setup'],
     },
 
+    {
+      name: 'local',
+      testMatch: /.*\.ide\.spec\.ts/, // optional: separate test files for local
+      use: {
+        headless: false,
+        baseURL: 'http://localhost:3000', // or your local server
+      },
+    },
+
   ],
 
   /* Run your local dev server before starting the tests */
