@@ -1,5 +1,4 @@
-import { FullConfig, chromium } from '@playwright/test';
-import { LandingPage } from '../pages/LandingPage';
+import { FullConfig } from '@playwright/test';
 import 'dotenv';
 
 /**

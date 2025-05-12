@@ -20,4 +20,9 @@ export class LandingPage {
         await this.page.getByRole('textbox', { name: 'Password' }).fill(password);
         await this.page.getByRole('button', { name: 'Sign in' }).click();
     }
+
+    async launchLanguage(language: string) {
+        const languageButton = await this.page.getByRole('button', { name: `Launch ${language}` });
+        await languageButton.click();
+    }
 }

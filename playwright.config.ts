@@ -53,8 +53,8 @@ export default defineConfig({
       name: 'local',
       testMatch: /.*\.ide\.spec\.ts/,
       use: {
-        headless: false,
-        baseURL: process.env.LOCAL_URL || 'http://localhost:3000',
+        baseURL: process.env.INSTANCE_URL || 'http://localhost:3000',
+        storageState: undefined,
       },
     },
 
