@@ -51,10 +51,10 @@ export default defineConfig({
 
     {
       name: 'local',
-      testMatch: /.*\.ide\.spec\.ts/, // optional: separate test files for local
+      testMatch: /.*\.ide\.spec\.ts/,
       use: {
         headless: false,
-        baseURL: 'http://localhost:3000', // or your local server
+        baseURL: process.env.LOCAL_URL || 'http://localhost:3000',
       },
     },
 
