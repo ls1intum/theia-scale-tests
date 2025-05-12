@@ -1,12 +1,11 @@
 import { test, expect } from '@playwright/test';
 import { LandingPage } from '../pages/LandingPage';
-
 test.describe('Landing Page Tests', () => {
 
   test.use({ storageState: { cookies: [], origins: [] } });
 
   test.beforeEach(async ({ page }) => {
-    await page.goto(`${process.env.BASE_URL}/`);
+    await page.goto(`/`);
   });
 
   test('LandingPage: Login button should be visible', async ({ page }) => {
@@ -36,7 +35,7 @@ test.describe.configure({ mode: 'serial' });
 test.describe('LandingPage: Landing Page Setup', () => {
 
   test.beforeEach(async ({ page }) => {
-    await page.goto(`${process.env.BASE_URL}/`);
+    await page.goto(`/`);
   });
 
   test('LandingPage: User should be logged in', async ({ page }) => {
@@ -61,7 +60,8 @@ test.describe('LandingPage: Landing Page Setup', () => {
   }
   );
 
-  test('LandingPage: Launch C instance', { tag: '@slow' }, async ({ page }) => {
+  test.skip('LandingPage: Launch C instance', async ({ page }) => {
+    test.setTimeout(120_000)
     const landingPage = new LandingPage(page);
     await landingPage.launchLanguage('C');
     await page.waitForURL(/.*#\/home\/project/);

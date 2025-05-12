@@ -1,5 +1,6 @@
 import { defineConfig, devices } from '@playwright/test';
 import dotenv from 'dotenv';
+import { baseURL, localURL } from './global.config'
 
 /**
  * Read environment variables from file.
@@ -28,7 +29,7 @@ export default defineConfig({
   use: {
     /* Base URL to use in actions like `await page.goto('/')`. */
     // baseURL: 'http://127.0.0.1:3000',
-    baseURL: process.env.BASE_URL || 'http://theia.artemis.cit.tum.de',
+    baseURL: baseURL,
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
@@ -38,10 +39,16 @@ export default defineConfig({
 
   /* Configure projects for major browsers */
   projects: [
-    { name: 'setup', testMatch: /.*\.setup\.ts/ },
+    { name: 'setup', 
+      testMatch: /.*\.setup\.ts/,
+      use: {
+        storageState: undefined,
+      },
+
+    },
 
     {
-      name: 'chromium',
+      name: 'deployed',
       use: {
         ...devices['Desktop Chrome'],
         storageState: './.auth/user.json',
@@ -53,7 +60,7 @@ export default defineConfig({
       name: 'local',
       testMatch: /.*\.ide\.spec\.ts/,
       use: {
-        baseURL: process.env.INSTANCE_URL || 'http://localhost:3000',
+        baseURL: localURL,
         storageState: undefined,
       },
     },
