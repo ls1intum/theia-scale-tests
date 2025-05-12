@@ -2,6 +2,7 @@ import { test, expect, chromium, BrowserContext, Page } from '@playwright/test';
 import { IDEPage } from '../pages/IDEPage';
 import { LandingPage } from '../pages/LandingPage';
 import { localURL } from '../global.config';
+import path from 'path';
 
 let context: BrowserContext;
 let page: Page;
@@ -9,9 +10,10 @@ let page: Page;
 test.describe('IDE Tests', () => {
 
   test.beforeAll(async ({}, testInfo) => {
-    test.setTimeout(120_000)
+    test.slow();
     const browser = await chromium.launch();
-    context = await browser.newContext();
+    const authFilePath = path.resolve(__dirname, '../.auth/user.json');
+    context = await browser.newContext({ storageState: authFilePath });
     page = await context.newPage();
 
     if (testInfo.project.name !== 'local') {
@@ -26,7 +28,6 @@ test.describe('IDE Tests', () => {
   });
 
   test('Create new File', async () => {
-    test.setTimeout(120_000)
     const idePage = new IDEPage(page);
     await idePage.createNewFile();
     await expect(page.getByRole('listitem', { name: /\/Untitled-/ })).toBeVisible();

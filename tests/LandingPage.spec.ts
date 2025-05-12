@@ -60,8 +60,8 @@ test.describe('LandingPage: Landing Page Setup', () => {
   }
   );
 
-  test.skip('LandingPage: Launch C instance', async ({ page }) => {
-    test.setTimeout(120_000)
+  test('LandingPage: Launch C instance', async ({ page }) => {
+    test.slow();
     const landingPage = new LandingPage(page);
     await landingPage.launchLanguage('C');
     await page.waitForURL(/.*#\/home\/project/);
