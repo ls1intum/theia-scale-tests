@@ -38,9 +38,24 @@ export default defineConfig({
 
   /* Configure projects for major browsers */
   projects: [
+    { name: 'setup', testMatch: /.*\.setup\.ts/ },
+
     {
       name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
+      use: {
+        ...devices['Desktop Chrome'],
+        storageState: './.auth/user.json',
+      },
+      dependencies: ['setup'],
+    },
+
+    {
+      name: 'local',
+      testMatch: /.*\.ide\.spec\.ts/,
+      use: {
+        headless: false,
+        baseURL: process.env.LOCAL_URL || 'http://localhost:3000',
+      },
     },
 
   ],
