@@ -1,6 +1,11 @@
 import { test, expect } from '@playwright/test';
-import { LandingPage } from '../pages/LandingPage';
-test.describe('Landing Page Tests', () => {
+import { LandingPage } from '../../pages/landing/LandingPage';
+
+/**
+ * @description This test suite is used to test the unauthenticated landing page of the application.
+ * @tag slow (starting the instance takes a while)
+ */
+test.describe('Landing Page Tests (unauthenticated)', () => {
 
   test.use({ storageState: { cookies: [], origins: [] } });
 
@@ -30,8 +35,10 @@ test.describe('Landing Page Tests', () => {
 
 });
 
-test.describe.configure({ mode: 'serial' });
-
+/**
+ * @description This test suite is used to test the authenticated landing page of the application.
+ * @tag slow (starting the instance takes a while)
+ */
 test.describe('LandingPage: Landing Page Setup', () => {
 
   test.beforeEach(async ({ page }) => {
@@ -60,7 +67,8 @@ test.describe('LandingPage: Landing Page Setup', () => {
   }
   );
 
-  test('LandingPage: Launch C instance', async ({ page }) => {
+  //TODO: Enable this test once sure of mulitple instance creation does not break the system
+  test.skip('LandingPage: Launch C instance', async ({ page }) => {
     test.slow();
     const landingPage = new LandingPage(page);
     await landingPage.launchLanguage('C');

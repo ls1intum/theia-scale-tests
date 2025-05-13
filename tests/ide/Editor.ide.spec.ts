@@ -1,18 +1,23 @@
 import { test, expect, chromium, BrowserContext, Page } from '@playwright/test';
-import { IDEPage } from '../pages/IDEPage';
-import { LandingPage } from '../pages/LandingPage';
-import { localURL } from '../global.config';
+import { IDEPage } from '../../pages/ide/IDEPage';
+import { LandingPage } from '../../pages/landing/LandingPage';
+import { localURL } from '../../global.config';
 import path from 'path';
 
 let context: BrowserContext;
 let page: Page;
 
+/**
+ * @description This test suite is used to test the IDE of the application.
+ * @important currently we create one context for all tests, so we can reuse the same instance for all tests.
+ * @tag slow (starting the instance takes a while)
+ */
 test.describe('IDE Tests', () => {
 
   test.beforeAll(async ({}, testInfo) => {
     test.slow();
     const browser = await chromium.launch();
-    const authFilePath = path.resolve(__dirname, '../.auth/user.json');
+    const authFilePath = path.resolve(__dirname, '../../.auth/user.json');
     context = await browser.newContext({ storageState: authFilePath });
     page = await context.newPage();
 
@@ -29,8 +34,9 @@ test.describe('IDE Tests', () => {
 
   test('Create new File', async () => {
     const idePage = new IDEPage(page);
-    await idePage.createNewFile();
-    await expect(page.getByRole('listitem', { name: /\/Untitled-/ })).toBeVisible();
+    const fileName = 'Test1';
+    await idePage.createNewFile(fileName);
+    await expect(page.getByRole('listitem', { name: `/home/project/${fileName}` })).toBeVisible();
   });
 
   test.afterAll(async () => {

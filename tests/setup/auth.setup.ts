@@ -1,5 +1,5 @@
 import { test as setup, expect } from '@playwright/test';
-import { LandingPage } from '../../pages/LandingPage';
+import { LandingPage } from '../../pages/landing/LandingPage';
 import path from 'path';
 
 const authFile = path.join(__dirname, '../../.auth/user.json');
