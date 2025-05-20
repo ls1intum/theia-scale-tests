@@ -30,6 +30,8 @@ export class IDEPage {
         await this.menuBar.waitForReady();
         await this.editor.waitForReady();
         await this.sideBar.waitForReady();
+        await this.page.locator('.gs-header').waitFor({ state: 'visible' });
+        await new Promise( resolve => setTimeout(resolve, 2000) );
     }
 
     /**
@@ -78,6 +80,8 @@ export class IDEPage {
     async deleteFile(fileName: string): Promise<void> {
         await this.sideBar.openExplorer();
         await this.sideBar.deleteFile(fileName);
+        await this.page.locator('.codicon-info').first().waitFor({ state: 'hidden' });
+        await new Promise( resolve => setTimeout(resolve, 2000) );
     }
     
 

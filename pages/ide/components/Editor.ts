@@ -10,7 +10,7 @@ export class Editor extends BaseComponent {
 
     async waitForReady(): Promise<void> {
         // Wait for the editor area to be visible
-        await this.page.locator('#theia-main-content-panel').waitFor();
+        await this.page.locator('#theia-main-content-panel').first().waitFor();
     }
 
     async typeText(text: string): Promise<void> {

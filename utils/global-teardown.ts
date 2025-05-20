@@ -4,8 +4,8 @@ import fs from'fs';
 import path from 'path';
 
 /**
- * Global setup for Playwright tests.
- * Initializes the page context by logging in with the provided credentials.
+ * Global teardown for Playwright tests.
+ * Deletes the auth file after the tests are run.
  */
 async function globalTeardown(config: FullConfig) {
   console.log('Running global teardown...');

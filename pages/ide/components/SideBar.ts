@@ -1,3 +1,4 @@
+import { expect } from '@playwright/test';
 import { BaseComponent } from './BaseComponent';
 
 /**
@@ -9,7 +10,7 @@ export class SideBar extends BaseComponent {
     readonly pagePart = this.page.locator('#theia-left-content-panel');
 
     async waitForReady(): Promise<void> {
-        await this.page.locator('#theia-left-content-panel').waitFor();
+        await this.page.locator('#theia-left-content-panel').first().waitFor();
     }
 
     // Start of Explorer Section
@@ -66,7 +67,10 @@ export class SideBar extends BaseComponent {
     }
 
     async deleteFile(fileName: string): Promise<void> {
-        await this.pagePart.locator('#theia-left-side-panel').getByTitle(`/home/project/${fileName}`).click({ button: "right" });
+        await expect(async () => {
+            await this.pagePart.locator('#theia-left-side-panel').getByTitle(`/home/project/${fileName}`).click({ button: "right" });
+            await expect(this.page.locator('[class*="Menu-content"]')).toBeVisible();
+          }).toPass();
         await this.page.locator('[class*="Menu-content"]').locator('[class*="Menu-itemLabel"]').getByText('Delete').click();
         await this.page.locator('.dialogBlock').getByText('OK').click();
     }

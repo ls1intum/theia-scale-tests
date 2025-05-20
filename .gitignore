@@ -10,3 +10,4 @@ node_modules/
 # For Local Development
 /.auth/
 playwright.env
+/test-data/

@@ -1,4 +1,4 @@
-import { Locator } from '@playwright/test';
+import { expect, Locator } from '@playwright/test';
 import { BaseComponent } from './BaseComponent';
 
 /**
@@ -15,8 +15,11 @@ export class Terminal extends BaseComponent {
     }
 
     async open(): Promise<void> {
-        await this.page.locator('#theia-top-panel').getByText('Terminal').click();
-        await this.page.locator('[class*="Menu-content"]').getByText('New Terminal').nth(0).click();
+        await expect(async () => {
+            await this.page.locator('#theia-top-panel').getByText('Terminal').click();
+            await expect(this.page.locator('[class*="MenuBar-menu"]')).toBeVisible();
+          }).toPass();
+        await this.page.locator('[class*="MenuBar-menu"]').getByText('New Terminal').nth(0).click();
         await this.waitForReady();
     }
 
