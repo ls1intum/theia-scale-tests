@@ -5,6 +5,9 @@ import { BaseComponent } from './BaseComponent';
  * Handles interactions with the code editor
  */
 export class Editor extends BaseComponent {
+
+    readonly pagePart = this.page.locator('#theia-main-content-panel');
+
     async waitForReady(): Promise<void> {
         // Wait for the editor area to be visible
         await this.page.locator('#theia-main-content-panel').waitFor();
@@ -15,11 +18,11 @@ export class Editor extends BaseComponent {
     }
 
     async getCurrentText(): Promise<string> {
-        return await this.page.locator('.monaco-editor').textContent() || '';
+        return await this.pagePart.locator('.monaco-editor').textContent() || '';
     }
 
     async focusOpenedFile(fileName: string): Promise<void> {
-        await this.page.locator('.theia-tabBar-tab-row').getByText(fileName).click();
+        await this.page.locator('#theia-main-content-panel').locator('.theia-tabBar-tab-row').getByText(fileName).click();
     }
 
     async selectAll(): Promise<void> {

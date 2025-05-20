@@ -14,7 +14,6 @@ export class Terminal extends BaseComponent {
         await this.page.getByRole('listitem', { name: 'Terminal' }).waitFor();
     }
 
-
     async open(): Promise<void> {
         await this.page.locator('#theia-top-panel').getByText('Terminal').click();
         await this.page.locator('[class*="Menu-content"]').getByText('New Terminal').nth(0).click();
@@ -39,5 +38,9 @@ export class Terminal extends BaseComponent {
 
     async close(): Promise<void> {
         await this.executeCommand('exit');
+    }
+
+    async focusTerminal(): Promise<void> {
+        await this.terminalLocator.getByRole('listitem', { name: 'Terminal' }).first().click();
     }
 } 

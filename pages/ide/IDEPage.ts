@@ -36,11 +36,18 @@ export class IDEPage {
      * Creates a new file with the given name
      * @param fileName Name of the file to create
      */
-    async createNewFile(fileName: string = 'Test-1'): Promise<void> {
+    async createNewFile(fileName: string = 'Test-1', directory: string = 'project'): Promise<void> {
         await this.menuBar.openNewFileDialog();
         await this.page.getByRole('combobox', { name: 'input' }).fill(fileName);
         await this.page.getByRole('option', { name: `Create New File (${fileName}),` }).locator('a').click();
+        await this.page.getByRole('combobox').selectOption('file:///home/' + directory);
         await this.page.getByRole('button', { name: 'Create File' }).click();
+    }
+
+    async createNewFolder(folderName: string = 'Folder-1'): Promise<void> {
+        await this.menuBar.openNewFolderDialog();
+        await this.page.locator('.dialogBlock').getByRole('textbox', { name: 'Folder Name' }).fill(folderName);
+        await this.page.locator('.dialogBlock').getByRole('button', { name: 'OK' }).click();
     }
 
     /**
@@ -48,9 +55,8 @@ export class IDEPage {
      * @param fileName Name of the file to open
      */
     async openFile(fileName: string): Promise<void> {
-        await this.sideBar.toggleExplorer();
+        await this.sideBar.openExplorer();
         await this.sideBar.selectFile(fileName);
-        await this.sideBar.toggleExplorer();
     }
 
     /**
@@ -66,6 +72,16 @@ export class IDEPage {
     }
 
     /**
+     * Deletes a file from the explorer
+     * @param fileName Name of the file to delete
+     */
+    async deleteFile(fileName: string): Promise<void> {
+        await this.sideBar.openExplorer();
+        await this.sideBar.deleteFile(fileName);
+    }
+    
+
+    /**
      * Opens the integrated terminal and executes a command
      * @param command Command to execute
      */
@@ -77,8 +93,14 @@ export class IDEPage {
 
     // Functions that return important locators for testing
 
-    getOpenedFileLocator(fileName: string): Locator {
-        return this.page.getByRole('listitem', { name: `/home/project/${fileName}` });
+    // returns locator for file in the editor
+    getEditorOpenedFileLocator(fileName: string): Locator {
+        return this.editor.pagePart.getByRole('listitem', { name: `/home/project/${fileName}` });
+    }
+
+    // returns locator for file in the file explorer
+    getExplorerOpenedFileLocator(fileName: string): Locator {
+        return this.sideBar.pagePart.locator(`#explorer-view-container`).getByTitle(`/home/project/${fileName}`);
     }
 
 }
