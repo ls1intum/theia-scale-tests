@@ -1,6 +1,5 @@
 import { test as setup, chromium } from '@playwright/test';
 import { LandingPage } from '../../pages/landing/LandingPage';
-import { localURL } from '../../global.config';
 import fs from 'fs';
 import path from 'path';
 
@@ -31,7 +30,7 @@ setup('Get IDE URL', async ({ }, testInfo) => {
     await landingPage.launchLanguage('C');
     await page.waitForURL(/.*#\/home\/project/);
   } else {
-    await page.goto(`${localURL}/`);
+    await page.goto(`/`);
     await page.waitForURL(/.*#\/home\/project/);
   }
 

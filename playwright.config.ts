@@ -1,6 +1,6 @@
 import { defineConfig, devices } from '@playwright/test';
 import dotenv from 'dotenv';
-import { baseURL, localURL } from './global.config'
+import { baseURL } from './global.config'
 
 /**
  * Read environment variables from file.
@@ -79,7 +79,7 @@ export default defineConfig({
       name: 'local',
       testMatch: /.*\.ide\.spec\.ts/,
       use: {
-        baseURL: localURL,
+        baseURL: process.env.LOCAL_URL,
         launchOptions: {
           slowMo: 100, //TODO: 100ms delay between actions as temp solution for slow UI
         },

@@ -1,6 +1,5 @@
 import { chromium } from '@playwright/test';
 import { LandingPage } from '../pages/landing/LandingPage';
-import { localURL } from '../global.config';
 import fs from 'fs';
 import path from 'path';
 
@@ -22,7 +21,7 @@ async function globalSetup(config: { projects: { name: string }[] }) {
     if (!fs.existsSync(testDataDir)) {
       fs.mkdirSync(testDataDir, { recursive: true });
     }
-    fs.writeFileSync(path.join(testDataDir, 'ide-url.txt'), localURL);
+    fs.writeFileSync(path.join(testDataDir, 'ide-url.txt'), process.env.LOCAL_URL || '');
   }
 
   console.log('Global setup completed.');

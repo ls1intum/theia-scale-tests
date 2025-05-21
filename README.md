@@ -14,11 +14,15 @@ This repository provides E2E integration tests for the [Theia Cloud IDE](https:/
 
 ## Setup
 
-- Install dependencies
+- Get the latest Theia IDE image from [here](ghcr.io/eclipse-theia/theia-ide/theia-ide:latest) and run it. Put the corresponding URL into the env file
+
+- Install dependencies and playwright
   ```bash
   npm install
   ```
-  
+  ```bash
+  npx playwright install
+  ```
 - To run the tests on the deployed Theia instance, run:
   ```bash
   npx playwright test --project=deployed
