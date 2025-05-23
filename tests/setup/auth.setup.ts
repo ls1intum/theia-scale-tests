@@ -1,4 +1,4 @@
-import { test as setup, expect } from '@playwright/test';
+import { test as setup } from '@playwright/test';
 import { LandingPage } from '../../pages/landing/LandingPage';
 import path from 'path';
 

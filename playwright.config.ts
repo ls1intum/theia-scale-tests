@@ -1,6 +1,6 @@
 import { defineConfig, devices } from '@playwright/test';
 import dotenv from 'dotenv';
-import { baseURL, localURL } from './global.config'
+import { baseURL } from './global.config'
 
 /**
  * Read environment variables from file.
@@ -24,6 +24,8 @@ export default defineConfig({
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: 'html',
 
+  timeout: 5 * 60 * 1000,
+
   globalSetup: require.resolve('./utils/global-setup.ts'),
 
   globalTeardown: require.resolve('./utils/global-teardown.ts'),
@@ -41,32 +43,48 @@ export default defineConfig({
 
   /* Configure projects for major browsers */
   projects: [
-    { name: 'setup', 
-      testMatch: /.*\.setup\.ts/,
+    // Setup project for auth
+    { 
+      name: 'auth-setup',
+      testMatch: '**/auth.setup.ts',
       use: {
         storageState: undefined,
-      },
-
+      }
     },
 
+    // Setup project for IDE URL
+    {
+      name: 'ide-setup',
+      testMatch: '**/ide.setup.ts',
+      use: {
+        storageState: '.auth/user.json',
+      },
+      dependencies: ['auth-setup']
+    },
+
+    // Main test projects
     {
       name: 'deployed',
       use: {
         ...devices['Desktop Chrome'],
-        storageState: './.auth/user.json',
+        storageState: '.auth/user.json',
+        launchOptions: {
+          slowMo: 500, //TODO: 500ms delay between actions as temp solution for slow UI
+        },
       },
-      dependencies: ['setup'],
+      dependencies: ['ide-setup']
     },
 
     {
       name: 'local',
       testMatch: /.*\.ide\.spec\.ts/,
       use: {
-        baseURL: localURL,
-        storageState: undefined,
+        baseURL: process.env.LOCAL_URL,
+        launchOptions: {
+          slowMo: 100, //TODO: 100ms delay between actions as temp solution for slow UI
+        },
       },
     },
-
   ],
 
   /* Run your local dev server before starting the tests */
