@@ -56,4 +56,16 @@ export class MenuBar extends BaseComponent {
     async pressRedo(): Promise<void> {
         await this.clickMenuItem('Edit', 'Redo');
     }
+
+    async pressFind(): Promise<void> {
+        await this.clickMenuItemNth('Edit', 'Find',0);
+    }
+
+    async pressFindAll(): Promise<void> {
+        await this.clickMenuItem('Edit', 'Find in Files');
+    }
+
+    async pressReplace(): Promise<void> {
+        await this.clickMenuItem('Edit', 'Replace');
+    }
 } 

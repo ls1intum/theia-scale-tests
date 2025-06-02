@@ -49,7 +49,14 @@ export class SideBar extends BaseComponent {
     // Start of Search Section
 
     async openSearch(): Promise<void> {
-        await this.pagePart.locator('#shell-tab-search-view-container').click();
+        if (await this.pagePart.locator('.theia-sidepanel-title').getByText('SEARCH').isHidden()) {
+            await this.pagePart.locator('#shell-tab-search-view-container').click();
+        }
+    }
+
+    async searchForText(text: string): Promise<void> {
+        await this.page.locator('#theia-left-content-panel').locator('.search-field-container').locator('#search-input-field').fill(text);
+        await this.page.keyboard.press('Enter');
     }
 
     // End of Search Section
