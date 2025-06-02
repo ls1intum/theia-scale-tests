@@ -29,7 +29,7 @@ export class TheiaWorkspace {
      * @param {string[]} pathOfFilesToInitialize Path to files or folders that shall be copied to the workspace
      */
     constructor(protected pathOfFilesToInitialize?: string[]) {
-        this.workspacePath = fs.mkdtempSync(`${OSUtil.tmpDir}${OSUtil.fileSeparator}cloud-ws-`);
+        //this.workspacePath = fs.mkdtempSync(`${OSUtil.tmpDir}${OSUtil.fileSeparator}cloud-ws-`); //THEIA SCALE TEST - DO NOT CREATE A LOCAL DIRECTORY
     }
 
     /** Performs the file system operations preparing the workspace location synchronously. */
@@ -73,6 +73,10 @@ export class TheiaWorkspace {
 
     remove(): void {
         fs.removeSync(this.workspacePath);
+    }
+
+    setPath(path: string): void {
+        this.workspacePath = path;
     }
 
 }

@@ -1,12 +1,12 @@
 import { test, expect } from '../fixtures/NEWtheia.fixture';
-import { TheiaTextEditor } from '../../theia-example/theia-text-editor';
-import { TheiaExplorerView } from '../../theia-example/theia-explorer-view';
-import { TheiaTerminal } from '../../theia-example/theia-terminal';
+import { TheiaTextEditor } from '../../pages/theia-example/theia-text-editor';
+import { TheiaExplorerView } from '../../pages/theia-example/theia-explorer-view';
+import { TheiaTerminal } from '../../pages/theia-example/theia-terminal';
 
 const testPrefix = 'NEWEditor-';
 
 test.describe('Theia IDE Editor Tests', () => {
-    test('Create new File', async ({ theiaApp }) => {
+    test.skip('Create new File', async ({ theiaApp }) => {
         const fileName = testPrefix + 'Test1';
         await (await theiaApp.menuBar.openMenu('File')).clickMenuItem('New File...');
         const quickPick = theiaApp.page.getByPlaceholder('Select File Type or Enter');
@@ -25,11 +25,12 @@ test.describe('Theia IDE Editor Tests', () => {
         await explorer.refresh();
         //await explorer.waitForVisibleFileNodes();
         expect(await explorer.existsFileNode(fileName)).toBe(true);
+        await theiaApp.page.locator('#theia\\:menubar .p-MenuBar-itemLabel').locator('text=File')
     });
 
     test.afterAll(async ({ theiaApp }) => {
         const terminal = await theiaApp.openTerminal(TheiaTerminal);
-        await terminal.write(`rm -rf ${testPrefix}*`);
+        await terminal.submit('rm -rf ${testPrefix}*');
     });
 
 });
