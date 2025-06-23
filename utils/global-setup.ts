@@ -1,5 +1,3 @@
-import { chromium } from '@playwright/test';
-import { LandingPage } from '../pages/landing/LandingPage';
 import fs from 'fs';
 import path from 'path';
 
@@ -13,7 +11,7 @@ async function globalSetup(config: { projects: { name: string }[] }) {
   if (!process.env.KEYCLOAK_USER || !process.env.KEYCLOAK_PWD) {
     throw new Error('USERNAME, or PASSWORD environment variable is not set');
   }
-  // Check if we're running local or deployed tests
+
   const isLocal = config.projects.some(project => project.name === 'local');
   
   if (isLocal) {
@@ -21,7 +19,13 @@ async function globalSetup(config: { projects: { name: string }[] }) {
     if (!fs.existsSync(testDataDir)) {
       fs.mkdirSync(testDataDir, { recursive: true });
     }
-    fs.writeFileSync(path.join(testDataDir, 'ide-url.txt'), process.env.LOCAL_URL || '');
+    fs.writeFileSync(path.join(testDataDir, 'ide-url-c.txt'), process.env.LOCAL_URL_C || '');
+    fs.writeFileSync(path.join(testDataDir, 'ide-url-java.txt'), process.env.LOCAL_URL_JAVA || '');
+    fs.writeFileSync(path.join(testDataDir, 'ide-url-python.txt'), process.env.LOCAL_URL_PYTHON || '');
+    fs.writeFileSync(path.join(testDataDir, 'ide-url-ocaml.txt'), process.env.LOCAL_URL_OCAML || '');
+    fs.writeFileSync(path.join(testDataDir, 'ide-url-rust.txt'), process.env.LOCAL_URL_RUST || '');
+    fs.writeFileSync(path.join(testDataDir, 'ide-url-javascript.txt'), process.env.LOCAL_URL_JS || '');
+
   }
 
   console.log('Global setup completed.');

@@ -49,3 +49,5 @@ This repository provides E2E integration tests for the [Theia Cloud IDE](https:/
     ```none
     *.ide.spec.ts
     ```
+  - Tests are intended to run on the production environment (https://theia.artemis.cit.tum.de)
+    - As tests include testing of all available programming languages: local images for each language can be found here: https://github.com/orgs/ls1intum/packages?tab=packages&q=theia

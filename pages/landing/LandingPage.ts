@@ -43,7 +43,7 @@ export class LandingPage {
     }
 
     async launchLanguage(language: string) {
-        const languageButton = await this.page.getByRole('button', { name: `Launch ${language}` });
+        const languageButton = await this.page.getByRole('button', { name: `Launch ${language}` }).first();
         await languageButton.click();
     }
 

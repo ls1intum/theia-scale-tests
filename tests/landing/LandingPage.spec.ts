@@ -1,4 +1,4 @@
-import { test, expect } from '../fixtures/ide.fixture';
+import { test, expect } from '../fixtures/theia.fixture';
 
 /**
  * @description This test suite is used to test the unauthenticated landing page of the application.
