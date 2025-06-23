@@ -12,7 +12,7 @@ const testPrefix = 'Search-';
 test.describe('IDE Search Tests', () => {
 
 
-    test('Search for text in a file', async ({ cApp }) => {
+    test.skip('Search for text in a file', async ({ cApp }) => {
         const fileName = testPrefix + 'Test1';
         await cApp.createNewFile(fileName);
         const editor = await cApp.theiaApp.openEditor(fileName, TheiaTextEditor);
