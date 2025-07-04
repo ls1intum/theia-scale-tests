@@ -1,1 +1,0 @@
-export let baseURL = 'https://theia.artemis.cit.tum.de';

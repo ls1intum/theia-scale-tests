@@ -1,5 +1,6 @@
 import { test as setup, chromium } from '@playwright/test';
 import { LandingPage } from '../../pages/landing/LandingPage';
+import { TestInfo } from '@playwright/test';
 import fs from 'fs';
 import path from 'path';
 
@@ -9,8 +10,10 @@ import path from 'path';
  * @tag slow (starting the instance takes a while)
  * @description This function automates the starting process for the LandingPage UI.
  */
-setup('Get IDE URL', async ({ }, testInfo) => {
-  setup.slow();
+
+
+
+async function setupIDE(language: string, testInfo: TestInfo) {
   const browser = await chromium.launch();
   let context;
 
@@ -27,7 +30,7 @@ setup('Get IDE URL', async ({ }, testInfo) => {
   if (testInfo.project.name !== 'local') {
     const landingPage = new LandingPage(page);
     await page.goto('/');
-    await landingPage.launchLanguage('C');
+    await landingPage.launchLanguage(language);
     await page.waitForURL(/.*#\/home\/project/);
   } else {
     await page.goto(`/`);
@@ -37,12 +40,12 @@ setup('Get IDE URL', async ({ }, testInfo) => {
   await page.waitForLoadState('domcontentloaded');
   
   const ideURL = page.url();
-  const testDataDir = path.join(process.cwd(), 'test-data');
+  const testDataDir = path.join(process.cwd(), 'test-data/scale');
   if (!fs.existsSync(testDataDir)) {
     fs.mkdirSync(testDataDir, { recursive: true });
   }
-  fs.writeFileSync(path.join(testDataDir, 'ide-url.txt'), ideURL);
+  fs.writeFileSync(path.join(testDataDir, 'ide-url-' + language.toLowerCase() + '.txt'), ideURL);
 
   await context.close();
   await browser.close();
-}); 
+}
