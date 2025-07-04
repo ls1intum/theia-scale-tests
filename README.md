@@ -14,7 +14,7 @@ This repository provides E2E integration tests for the [Theia Cloud IDE](https:/
 
 ## Setup
 
-- Get the latest Theia IDE image from [here](ghcr.io/eclipse-theia/theia-ide/theia-ide:latest) and run it. Put the corresponding URL into the env file
+- Get the latest Theia IDE image from [here](https://ghcr.io/eclipse-theia/theia-ide/theia-ide:latest) and run it. Put the corresponding URL into the env file
 
 - Install dependencies and playwright
   ```bash
@@ -23,9 +23,12 @@ This repository provides E2E integration tests for the [Theia Cloud IDE](https:/
   ```bash
   npx playwright install
   ```
-- To run the tests on the deployed Theia instance, run:
+
+## Run Tests
+
+- To run the functional tests on the deployed Theia instance, run:
   ```bash
-  npx playwright test --project=deployed
+  npx playwright test --project=functional
   ```
   
 - To run tests locally using a Theia Instance on localhost, change the environment variable to the corresponding port and run the tests using:
@@ -33,9 +36,13 @@ This repository provides E2E integration tests for the [Theia Cloud IDE](https:/
   npx playwright test --project=local
   ```
 
-- To run every test (requires local Theia instance), simply run:
+- To run the scalability tests, run:
   ```bash
-  npx playwright test
+  npx playwright test --project=scale
+  ```
+  Set the amount of instances in the ENV file or pass it like this (ex. 100 instances):
+  ```bash
+  NUM_INSTANCE=100 npx playwright test --project=scale
   ```
 
 
@@ -45,9 +52,15 @@ This repository provides E2E integration tests for the [Theia Cloud IDE](https:/
   - Single User Playwright Tests are run using a Test Account for Keycloak, to change the Test User, change the environment variables in GitHub Secrets \
 -> Settings -> Secrets and variables -> Actions -> Secrets -> Repository Secrets \
 
-  - Test files that allow local testing (testing without Landing Page and Keycloak) have the following file ending:
+  - All functional tests (that can also be run on a local instance) have the following file format:
     ```none
-    *.ide.spec.ts
+    *.functional.spec.ts
     ```
+  - All scalable tests (that can only be run on a scalable supported instance) have the following file format:
+    ```none
+    *.scale.spec.ts
+    ```
+  - Tests require to have a specific setup files run before them. These are normally already run by requirements of the __playwright.config.ts__
+  - The tests safe the URL for each instance in a text file under __/test-data__ for debugging and to access them in the tests
   - Tests are intended to run on the production environment (https://theia.artemis.cit.tum.de)
     - As tests include testing of all available programming languages: local images for each language can be found here: https://github.com/orgs/ls1intum/packages?tab=packages&q=theia
