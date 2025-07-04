@@ -10,35 +10,7 @@ import path from 'path';
  * @tag slow (starting the instance takes a while)
  * @description This function automates the starting process for the LandingPage UI.
  */
-setup('Get IDE URL for C', async ({ }, testInfo) => {
-  setup.slow();
-  await setupIDE('C', testInfo);
-}); 
 
-setup('Get IDE URL for Java', async ({ }, testInfo) => {
-  setup.slow();
-  await setupIDE('Java', testInfo);
-}); 
-
-setup('Get IDE URL for Python', async ({ }, testInfo) => {
-  setup.slow();
-  await setupIDE('Python', testInfo);
-}); 
-
-setup('Get IDE URL for Rust', async ({ }, testInfo) => {
-  setup.slow();
-  await setupIDE('Rust', testInfo);
-}); 
-
-setup('Get IDE URL for OCaml', async ({ }, testInfo) => {
-  setup.slow();
-  await setupIDE('Ocaml', testInfo);
-}); 
-
-setup('Get IDE URL for JavaScript', async ({ }, testInfo) => {
-  setup.slow();
-  await setupIDE('Javascript', testInfo);
-}); 
 
 
 async function setupIDE(language: string, testInfo: TestInfo) {
@@ -68,7 +40,7 @@ async function setupIDE(language: string, testInfo: TestInfo) {
   await page.waitForLoadState('domcontentloaded');
   
   const ideURL = page.url();
-  const testDataDir = path.join(process.cwd(), 'test-data');
+  const testDataDir = path.join(process.cwd(), 'test-data/scale');
   if (!fs.existsSync(testDataDir)) {
     fs.mkdirSync(testDataDir, { recursive: true });
   }

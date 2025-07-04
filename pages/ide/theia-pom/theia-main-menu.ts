@@ -14,7 +14,7 @@
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-only WITH Classpath-exception-2.0
 // *****************************************************************************
 
-import { ElementHandle } from '@playwright/test';
+import { ElementHandle, expect } from '@playwright/test';
 
 import { TheiaMenu } from './theia-menu';
 import { TheiaPageObject } from './theia-page-object';
@@ -32,8 +32,12 @@ export class TheiaMenuBar extends TheiaPageObject {
         if (await mainMenu.isOpen()) {
             await menuBarItem?.hover();
         } else {
-            await menuBarItem?.click();
+            await expect(async () => { //tobikli
+                await menuBarItem?.click();
+                await expect(this.page.locator(mainMenu.selector)).toBeVisible();
+              }).toPass();
         }
+        
         mainMenu.waitForVisible();
         return mainMenu;
     }

@@ -4,8 +4,6 @@ import path from 'path';
 
 const authFile = path.join(__dirname, '../../.auth/user.json');
 
-export var currentInstanceURL = "";
-
 /**
  * @remarks
  * This function is used to log in to Keycloak for theia via using the UI.
@@ -23,3 +21,4 @@ setup('Auth: Authenticate Keycloak', async ({ page }) => {
 
   await page.context().storageState({ path: authFile });
 });
+

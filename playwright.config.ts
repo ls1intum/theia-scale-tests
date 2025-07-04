@@ -1,6 +1,5 @@
 import { defineConfig, devices } from '@playwright/test';
 import dotenv from 'dotenv';
-import { baseURL } from './global.config'
 
 /**
  * Read environment variables from file.
@@ -33,7 +32,7 @@ export default defineConfig({
   use: {
     /* Base URL to use in actions like `await page.goto('/')`. */
     // baseURL: 'http://127.0.0.1:3000',
-    baseURL: baseURL,
+    baseURL: process.env.LANDINGPAGE_URL || 'https://theia.artemis.cit.tum.de',
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
@@ -54,8 +53,18 @@ export default defineConfig({
 
     // Setup project for IDE URL
     {
-      name: 'ide-setup',
-      testMatch: '**/ide.setup.ts',
+      name: 'functional-setup',
+      testMatch: '**/functional.setup.ts',
+      use: {
+        storageState: '.auth/user.json',
+      },
+      dependencies: ['auth-setup']
+    },
+
+    // Setup project for Scale tests
+    {
+      name: 'scale-setup',
+      testMatch: '**/scale.setup.ts',
       use: {
         storageState: '.auth/user.json',
       },
@@ -64,7 +73,8 @@ export default defineConfig({
 
     // Main test projects
     {
-      name: 'deployed',
+      name: 'functional',
+      testIgnore: /.*\.scale\.spec\.ts/,
       use: {
         ...devices['Desktop Chrome'],
         storageState: '.auth/user.json',
@@ -72,12 +82,29 @@ export default defineConfig({
           slowMo: 500, //TODO: 500ms delay between actions as temp solution for slow UI
         },
       },
-      dependencies: ['ide-setup']
+      dependencies: ['functional-setup']
     },
 
+    // Scale testing on deployed version
+    {
+      name: 'scale',
+      testIgnore: /.*\.functional\.spec\.ts/,
+      fullyParallel: true,
+      workers: process.env.NUM_INSTANCES ? parseInt(process.env.NUM_INSTANCES) : 1,
+      use: {
+        ...devices['Desktop Chrome'],
+        storageState: '.auth/user.json',
+        launchOptions: {
+          slowMo: 500, //TODO: 500ms delay between actions as temp solution for slow UI
+        },
+      },
+      dependencies: ['scale-setup']
+    },
+
+    // Local testing for functional tests
     {
       name: 'local',
-      testMatch: /.*\.ide\.spec\.ts/,
+      testMatch: /.*\.functional\.spec\.ts/,
       use: {
         baseURL: process.env.LOCAL_URL,
         launchOptions: {

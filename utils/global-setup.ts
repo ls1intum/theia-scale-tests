@@ -15,7 +15,7 @@ async function globalSetup(config: { projects: { name: string }[] }) {
   const isLocal = config.projects.some(project => project.name === 'local');
   
   if (isLocal) {
-    const testDataDir = path.join(process.cwd(), 'test-data');
+    const testDataDir = path.join(process.cwd(), 'test-data/functional');
     if (!fs.existsSync(testDataDir)) {
       fs.mkdirSync(testDataDir, { recursive: true });
     }
@@ -26,6 +26,22 @@ async function globalSetup(config: { projects: { name: string }[] }) {
     fs.writeFileSync(path.join(testDataDir, 'ide-url-rust.txt'), process.env.LOCAL_URL_RUST || '');
     fs.writeFileSync(path.join(testDataDir, 'ide-url-javascript.txt'), process.env.LOCAL_URL_JS || '');
 
+  } else {
+    if (!process.env.LANDINGPAGE_URL) {
+      throw new Error('LANDINGPAGE_URL environment variable is not set');
+    }
+  }
+
+  const isScale = config.projects.some(project => project.name === 'scale');
+
+  if (isScale) {
+    if (!process.env.NUM_INSTANCES) {
+      throw new Error('NUM_INSTANCES environment variable is not set');
+    }
+    const testDataDir = path.join(process.cwd(), 'test-data/scale');
+    if (!fs.existsSync(testDataDir)) {
+      fs.mkdirSync(testDataDir, { recursive: true });
+    }
   }
 
   console.log('Global setup completed.');

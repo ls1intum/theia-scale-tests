@@ -27,7 +27,7 @@ export const test = base.extend<TheiaFixtures>({
         await page.close();
     },
     cApp: async ({ browser }, use) => {
-        const urlPath = path.join(process.cwd(), 'test-data', 'ide-url-c.txt');
+        const urlPath = path.join(process.cwd(), 'test-data/functional', 'ide-url-c.txt');
         const ideURL = fs.readFileSync(urlPath, 'utf8');
         const page = await browser.newPage();
         const workspace = new TheiaWorkspace();
@@ -41,7 +41,7 @@ export const test = base.extend<TheiaFixtures>({
         await page.close();
     },
     javaApp: async ({ browser }, use) => {
-        const urlPath = path.join(process.cwd(), 'test-data', 'ide-url-java.txt');
+        const urlPath = path.join(process.cwd(), 'test-data/functional', 'ide-url-java.txt');
         const ideURL = fs.readFileSync(urlPath, 'utf8');
         const page = await browser.newPage();
         const workspace = new TheiaWorkspace();
@@ -55,7 +55,7 @@ export const test = base.extend<TheiaFixtures>({
         await page.close();
     },
     pythonApp: async ({ browser }, use) => {
-        const urlPath = path.join(process.cwd(), 'test-data', 'ide-url-python.txt');
+        const urlPath = path.join(process.cwd(), 'test-data/functional', 'ide-url-python.txt');
         const ideURL = fs.readFileSync(urlPath, 'utf8');
         const page = await browser.newPage();
         const workspace = new TheiaWorkspace();
@@ -69,7 +69,7 @@ export const test = base.extend<TheiaFixtures>({
         await page.close();
     },
     ocamlApp: async ({ browser }, use) => {
-        const urlPath = path.join(process.cwd(), 'test-data', 'ide-url-ocaml.txt');
+        const urlPath = path.join(process.cwd(), 'test-data/functional', 'ide-url-ocaml.txt');
         const ideURL = fs.readFileSync(urlPath, 'utf8');
         const page = await browser.newPage();
         const workspace = new TheiaWorkspace();
@@ -83,7 +83,7 @@ export const test = base.extend<TheiaFixtures>({
         await page.close();
     },
     rustApp: async ({ browser }, use) => {
-        const urlPath = path.join(process.cwd(), 'test-data', 'ide-url-rust.txt');
+        const urlPath = path.join(process.cwd(), 'test-data/functional', 'ide-url-rust.txt');
         const ideURL = fs.readFileSync(urlPath, 'utf8');
         const page = await browser.newPage();
         const workspace = new TheiaWorkspace();
@@ -97,7 +97,7 @@ export const test = base.extend<TheiaFixtures>({
         await page.close();
     },
     jsApp: async ({ browser }, use) => {
-        const urlPath = path.join(process.cwd(), 'test-data', 'ide-url-js.txt');
+        const urlPath = path.join(process.cwd(), 'test-data/functional', 'ide-url-js.txt');
         const ideURL = fs.readFileSync(urlPath, 'utf8');
         const page = await browser.newPage();
         const workspace = new TheiaWorkspace();
