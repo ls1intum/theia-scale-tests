@@ -1,8 +1,7 @@
 import { test, expect } from '../../../fixtures/theia.fixture';
 import { TheiaTextEditor } from '../../../pages/ide/theia-pom/theia-text-editor';
-import { uniqueWords10, uniqueWords20, uniqueWords30 } from '../../../utils/example-texts/lorem-ipsum';
+import { uniqueWords10 } from '../../../utils/example-texts/lorem-ipsum';
 import { TheiaTerminal } from '../../../pages/ide/theia-pom/theia-terminal';
-import { TheiaMenuBar } from '../../../pages/ide/theia-pom/theia-main-menu';
 import { TheiaSearchView } from '../../../pages/ide/custom-pom/theia-search';
 
 /**
