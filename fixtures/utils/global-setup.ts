@@ -28,7 +28,13 @@ async function globalSetup(config: { projects: { name: string }[] }) {
 
   } else {
     if (!process.env.LANDINGPAGE_URL) {
-      throw new Error('LANDINGPAGE_URL environment variable is not set');
+      throw new Error('LANDINGPAGE_URL environment variable is not set, please set the base URL for the Theiea instance to be tested against');
+    }
+    if (!process.env.ARTEMIS_URL) {
+      throw new Error('ARTEMIS_URL environment variable is not set, please set the URL for the instance to be tested against');
+    }
+    if (!process.env.ARTEMIS_USER || !process.env.ARTEMIS_PWD) {
+      throw new Error('ARTEMIS_USER or ARTEMIS_PWD environment variable is not set, please set the privileged Artemis User');
     }
   }
 

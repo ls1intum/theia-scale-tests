@@ -1,7 +1,8 @@
-import { test as base, Page } from '@playwright/test';
+import { test as base } from '@playwright/test';
 import { TheiaApp } from '../pages/ide/theia-pom/theia-app';
 import { TheiaWorkspace } from '../pages/ide/theia-pom/theia-workspace';
 import { IDEPage } from '../pages/ide/IDEPage';
+import { ArtemisPage } from '../pages/artemis/ArtemisPage';
 import { LandingPage } from '../pages/landing/LandingPage';
 import fs from 'fs';
 import path from 'path';
@@ -14,6 +15,7 @@ interface TheiaFixtures {
     ocamlApp: IDEPage;
     rustApp: IDEPage;
     jsApp: IDEPage;
+    artemis: ArtemisPage;
 }
 
 export const test = base.extend<TheiaFixtures>({
@@ -108,6 +110,15 @@ export const test = base.extend<TheiaFixtures>({
         await theiaApp.waitForShellAndInitialized();
         
         await use(jsApp);
+        await page.close();
+    },
+    artemis: async ({ browser }, use) => {
+        const artemisURL = process.env.ARTEMIS_URL!;
+        const page = await browser.newPage();
+        const artemisApp = new ArtemisPage(page, artemisURL);
+        await page.goto(artemisURL);
+        
+        await use(artemisApp);
         await page.close();
     },
 

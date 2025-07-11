@@ -1,6 +1,6 @@
 import { test, expect } from '../../../fixtures/theia.fixture';
 import { TheiaTextEditor } from '../../../pages/ide/theia-pom/theia-text-editor';
-import { uniqueWords10 } from '../../../utils/example-texts/lorem-ipsum';
+import { uniqueWords10 } from '../../../fixtures/utils/example-texts/lorem-ipsum';
 import { TheiaTerminal } from '../../../pages/ide/theia-pom/theia-terminal';
 import { TheiaSearchView } from '../../../pages/ide/custom-pom/theia-search';
 
