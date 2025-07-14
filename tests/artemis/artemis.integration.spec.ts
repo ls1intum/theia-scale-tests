@@ -1,21 +1,22 @@
+import { Page } from '@playwright/test';
 import { test, expect } from '../../fixtures/theia.fixture';
 import { ExercisePage } from '../../pages/artemis/ExercisePage';
-import { TheiaExplorerView } from '../../pages/ide/theia-pom/theia-explorer-view';
-import { TheiaTerminal } from '../../pages/ide/theia-pom/theia-terminal';
-import { TheiaTextEditor } from '../../pages/ide/theia-pom/theia-text-editor';
+import { IDEPage } from '../../pages/ide/IDEPage';
+import { TheiaApp } from '../../pages/ide/theia-pom/theia-app';
+import { TheiaWorkspace } from '../../pages/ide/theia-pom/theia-workspace';
+import { ScorpioView } from '../../pages/ide/custom-pom/scorpio';
 
 const testPrefix = 'Artemis-';
 
 test.describe('Theia Artemis Integration', { tag: '@sequential' }, () => {
     let course: any;
     let exercise: any;
+    let theiaPage: IDEPage;
     
     test.beforeAll(async ({ artemis }) => {
         await artemis.login(process.env.ARTEMIS_USER!, process.env.ARTEMIS_PWD!);
         course = await artemis.createSimpleCourse();
-        console.log(course);
         exercise = await artemis.createTheiaEnabledExercise(course);
-        console.log(exercise);
     });
 
     test('Creation of course and exercise is possible', async ({ }) => {
@@ -27,14 +28,31 @@ test.describe('Theia Artemis Integration', { tag: '@sequential' }, () => {
         const exercisePage = new ExercisePage(artemis.page, exercise.id);
         await exercisePage.startParticipation();
 
-        const [theiaPage] = await Promise.all([artemis.page.context().waitForEvent('page'), exercisePage.openInOnlineIDE()]);
-        landingPage.setPage(theiaPage);
+        const [redirect] = await Promise.all([artemis.page.context().waitForEvent('page'), exercisePage.openInOnlineIDE()]);
+        landingPage.setPage(redirect);
         await landingPage.waitForReady();
         //await landingPage.login(process.env.ARTEMIS_USER!, process.env.ARTEMIS_PWD!);
         await landingPage.login(process.env.KEYCLOAK_USER!, process.env.KEYCLOAK_PWD!);
-        await theiaPage.waitForURL(/.*#\/home\/project/); //signalizes that theia session is loading
-        // Theia should be loaded now
-        // TODO
+        await redirect.waitForURL(/.*#\/home\/project/); //signalizes that theia session is loading
+
+        //Setup theiaPage for sequential tests
+        const workspace = new TheiaWorkspace();
+        workspace.setPath("/home/project");
+        const theiaApp = new TheiaApp(redirect, workspace, false);
+        theiaPage = new IDEPage(redirect, theiaApp, redirect.url());
+    });
+
+    test('Student uses Scorpio', async ({ }) => {
+        const scorpioView = await theiaPage.theiaApp.openView(ScorpioView);
+    });
+
+    test('Student submits code', async ({ }) => {
+    });
+
+    test.skip('check result', async ({ artemis }) => {
+        await artemis.page.goto(artemis.baseURL + `/courses/${course.id}/exercises/${exercise.id}`);
+        const exercisePage = new ExercisePage(artemis.page, exercise.id);
+        await exercisePage.checkResultScore('100%');
     });
 
     test.afterAll(async ({ artemis }) => {
