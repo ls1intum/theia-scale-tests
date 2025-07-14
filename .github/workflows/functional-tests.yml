@@ -12,7 +12,7 @@ jobs:
       KEYCLOAK_USER: ${{ secrets.KEYCLOAK_USER }}
       KEYCLOAK_PWD: ${{ secrets.KEYCLOAK_PWD }}
       LANDINGPAGE_URL: https://theia.artemis.cit.tum.de
-      ARTEMIS_URL: https://staging1.artemis.cit.tum.de
+      ARTEMIS_URL: https://artemis-test9.artemis.cit.tum.de
       ARTEMIS_USER: ${{ secrets.ARTEMIS_USER }}
       ARTEMIS_PWD: ${{ secrets.ARTEMIS_PWD }}
       NUM_INSTANCES: 10

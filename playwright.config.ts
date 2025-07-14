@@ -74,7 +74,7 @@ export default defineConfig({
     // Main test projects
     {
       name: 'functional',
-      testIgnore: /.*\.scale\.spec\.ts/,
+      testMatch: /.*\.functional\.spec\.ts/,
       use: {
         ...devices['Desktop Chrome'],
         storageState: '.auth/user.json',
@@ -88,7 +88,7 @@ export default defineConfig({
     // Scale testing on deployed version
     {
       name: 'scale',
-      testIgnore: /.*\.functional\.spec\.ts/,
+      testMatch: /.*\.scale\.spec\.ts/,
       fullyParallel: true,
       workers: process.env.NUM_INSTANCES ? parseInt(process.env.NUM_INSTANCES) : 1,
       use: {
