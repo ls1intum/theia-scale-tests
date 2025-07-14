@@ -9,20 +9,36 @@ test.describe('Theia IDE VSC Tests', () => {
     test.use({
         permissions: ['clipboard-write', 'clipboard-read']
     })
+
+    test.beforeAll(async ({ cApp }) => {
+        const terminal = await cApp.theiaApp.openTerminal(TheiaTerminal);
+        await terminal.submit('git init');
+        await terminal.submit('git config --global user.email "test@test.com"');
+        await terminal.submit('git config --global user.name "Test User"');
+        await terminal.submit('git status');
+        const contents = await terminal.contents();
+        await expect(contents).not.toContain('not a git repository');
+    });
     
     test('Commit', async ({ cApp }) => {
         const terminal = await cApp.theiaApp.openTerminal(TheiaTerminal);
         await expect(terminal.page.locator(terminal.viewSelector)).toBeVisible();
-        await terminal.submit('git init');
         await terminal.submit('touch ' + testPrefix + 'Test1');
         const vsc = await cApp.theiaApp.openView(TheiaVSCView);
         await vsc.commit('Initial commit');
+        await terminal.submit('git status');
+        const contents = await terminal.contents();
+        await expect(contents).not.toContain('No commits yet');
     });
 
+    test.fixme('Push', async ({ cApp }) => {
+    });
 
     test.afterAll(async ({ cApp }) => {
         const terminal = await cApp.theiaApp.openTerminal(TheiaTerminal);
         await terminal.submit('rm -rf ${testPrefix}*');
+        await terminal.submit('rm -rf .git');
+
     });
 
 });
