@@ -19,15 +19,15 @@ export default defineConfig({
   /* Retry on CI only */
   retries: process.env.CI ? 2 : 0,
   /* Opt out of parallel tests on CI. */
-  workers: process.env.CI ? 1 : undefined,
+  workers: process.env.CI ? process.env.NUM_INSTANCES ? parseInt(process.env.NUM_INSTANCES) : 1 : undefined,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: 'html',
 
   timeout: 30 * 1000,
 
-  globalSetup: require.resolve('./utils/global-setup.ts'),
+  globalSetup: require.resolve('./fixtures/utils/global-setup.ts'),
 
-  globalTeardown: require.resolve('./utils/global-teardown.ts'),
+  globalTeardown: require.resolve('./fixtures/utils/global-teardown.ts'),
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Base URL to use in actions like `await page.goto('/')`. */
@@ -74,7 +74,7 @@ export default defineConfig({
     // Main test projects
     {
       name: 'functional',
-      testIgnore: /.*\.scale\.spec\.ts/,
+      testMatch: /.*\.functional\.spec\.ts/,
       use: {
         ...devices['Desktop Chrome'],
         storageState: '.auth/user.json',
@@ -88,7 +88,7 @@ export default defineConfig({
     // Scale testing on deployed version
     {
       name: 'scale',
-      testIgnore: /.*\.functional\.spec\.ts/,
+      testMatch: /.*\.scale\.spec\.ts/,
       fullyParallel: true,
       workers: process.env.NUM_INSTANCES ? parseInt(process.env.NUM_INSTANCES) : 1,
       use: {
@@ -99,6 +99,19 @@ export default defineConfig({
         },
       },
       dependencies: ['scale-setup']
+    },
+
+    {
+      name: 'artemis',
+      testMatch: /.*\.integration\.spec\.ts/,
+      fullyParallel: true,
+      workers: process.env.NUM_INSTANCES ? parseInt(process.env.NUM_INSTANCES) : 1,
+      use: {
+        ...devices['Desktop Chrome'],
+        launchOptions: {
+          slowMo: 100, //TODO: 100ms delay between actions as temp solution for slow UI
+        },
+      },
     },
 
     // Local testing for functional tests

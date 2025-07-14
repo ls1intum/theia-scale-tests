@@ -4,7 +4,7 @@ import { Locator, Page } from '@playwright/test';
  * A class which encapsulates the landing page of Theia with UI selectors.
  */
 export class LandingPage {
-    readonly page: Page;
+    page: Page;
 
     readonly languageCLocator: Locator;
     readonly languageJavaLocator: Locator;
@@ -49,6 +49,10 @@ export class LandingPage {
 
     retrieveAllLanguageLocators() {
         return [this.languageCLocator, this.languageJavaLocator, this.languageJSLocator, this.languageOcamlLocator, this.languagePythonLocator, this.languageRustLocator];
+    }
+
+    setPage(page: Page) {
+        this.page = page;
     }
 
 }

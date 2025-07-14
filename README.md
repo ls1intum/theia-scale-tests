@@ -45,6 +45,13 @@ This repository provides E2E integration tests for the [Theia Cloud IDE](https:/
   NUM_INSTANCE=100 npx playwright test --project=scale
   ```
 
+| Project Identifier | Description                                                                                                     |
+|--------------------|-----------------------------------------------------------------------------------------------------------------|
+| local              | Runs all __functional__ tests on a local instance, provided by the URL in the env file.                         |
+| functional         | Runs all __functional__ tests on the deployed instance, provided by the URL in the env file.                    |
+| scale              | Runs all __scalability__ tests on the deployed instance, provided by the URL in the env file.                   |
+| artemis            | Runs the __integration__ test with Artemis, either local or deployed depending on the URLs set in the env file. |
+| *-setup            | These are setup projects and not meant to be run on its own. Dependencies are already set.                      |
 
 
 ## Development

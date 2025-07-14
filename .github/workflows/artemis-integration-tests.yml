@@ -1,4 +1,4 @@
-name: Playwright Tests
+name: Artemis Integration Tests
 on:
   push:
     branches: [ main, master ]
@@ -12,7 +12,11 @@ jobs:
       KEYCLOAK_USER: ${{ secrets.KEYCLOAK_USER }}
       KEYCLOAK_PWD: ${{ secrets.KEYCLOAK_PWD }}
       LANDINGPAGE_URL: https://theia.artemis.cit.tum.de
+      ARTEMIS_URL: https://artemis-test9.artemis.cit.tum.de
+      ARTEMIS_USER: ${{ secrets.ARTEMIS_USER }}
+      ARTEMIS_PWD: ${{ secrets.ARTEMIS_PWD }}
       NUM_INSTANCES: 10
+
     steps:
     - uses: actions/checkout@v4
     - uses: actions/setup-node@v4
@@ -23,7 +27,7 @@ jobs:
     - name: Install Playwright Browsers
       run: npx playwright install --with-deps
     - name: Run Playwright tests
-      run: npx playwright test --project=functional --workers=10
+      run: npx playwright test --project=artemis --workers=10
     - uses: actions/upload-artifact@v4
       if: ${{ !cancelled() }}
       with:
