@@ -87,6 +87,8 @@ export class ArtemisPage {
         };
 
         const response = await this.page.request.post(this.baseURL + '/api/core/admin/courses', { multipart });
+        console.log(response.status());
+        expect(response.ok()).toBe(true);
         return response.json();
     }
 
@@ -127,6 +129,7 @@ export class ArtemisPage {
             },
         };
         const response = await this.page.request.post(this.baseURL + `/api/programming/programming-exercises/setup`, { data: exercise });
+        expect(response.ok()).toBe(true);
         return response.json();
     }
 

@@ -23,7 +23,7 @@ test.describe('Theia Artemis Integration', { tag: '@sequential' }, () => {
 
     test('Theia IDE loads from Artemis', async ({ artemis, landingPage }) => {
         await artemis.login(process.env.ARTEMIS_USER!, process.env.ARTEMIS_PWD!);
-        await artemis.page.goto(artemis.baseURL + '/courses/' + course.id + '/exercises/' + exercise.id);
+        await artemis.page.goto(artemis.baseURL + `/courses/${course.id}/exercises/${exercise.id}`);
         const exercisePage = new ExercisePage(artemis.page, exercise.id);
         await exercisePage.startParticipation();
 
