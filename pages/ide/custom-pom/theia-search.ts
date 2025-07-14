@@ -1,11 +1,5 @@
-import { ElementHandle } from '@playwright/test';
 import { TheiaApp } from '../theia-pom/theia-app';
-import { TheiaDialog } from '../theia-pom/theia-dialog';
-import { TheiaMenuItem } from '../theia-pom/theia-menu-item';
-import { TheiaRenameDialog } from '../theia-pom/theia-rename-dialog';
-import { TheiaTreeNode } from '../theia-pom/theia-tree-node';
 import { TheiaView } from '../theia-pom/theia-view';
-import { elementContainsClass, normalizeId, OSUtil, urlEncodePath } from '../theia-pom/util';
 
 const TheiaSearchViewData = {
     tabSelector: '#shell-tab-search-view-container',

@@ -6,9 +6,9 @@ import { TheiaApp } from '../../pages/ide/theia-pom/theia-app';
 import { TheiaWorkspace } from '../../pages/ide/theia-pom/theia-workspace';
 import { ScorpioView } from '../../pages/ide/custom-pom/scorpio';
 
-const testPrefix = 'Artemis-';
-
-test.describe('Theia Artemis Integration', { tag: '@sequential' }, () => {
+test.describe('Theia Artemis Integration', () => {
+    test.describe.configure({ mode: 'serial' });
+    
     let course: any;
     let exercise: any;
     let theiaPage: IDEPage;
@@ -40,6 +40,7 @@ test.describe('Theia Artemis Integration', { tag: '@sequential' }, () => {
         workspace.setPath("/home/project");
         const theiaApp = new TheiaApp(redirect, workspace, false);
         theiaPage = new IDEPage(redirect, theiaApp, redirect.url());
+        await theiaPage.waitForReady();
     });
 
     test('Student uses Scorpio', async ({ }) => {
