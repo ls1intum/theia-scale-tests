@@ -15,7 +15,7 @@ jobs:
       ARTEMIS_URL: https://artemis-test9.artemis.cit.tum.de
       ARTEMIS_USER: ${{ secrets.ARTEMIS_USER }}
       ARTEMIS_PWD: ${{ secrets.ARTEMIS_PWD }}
-      NUM_INSTANCES: 10
+      NUM_INSTANCES: ${{ vars.NUM_INSTANCES }}
 
     steps:
     - uses: actions/checkout@v4

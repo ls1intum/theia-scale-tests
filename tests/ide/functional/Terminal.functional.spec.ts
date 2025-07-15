@@ -5,58 +5,59 @@ import { TheiaExplorerView } from '../../../pages/ide/theia-pom/theia-explorer-v
 const testPrefix = 'Terminal-';
 
 test.describe('Theia IDE Terminal Tests', () => {
+    test.describe.configure({ mode: 'serial' });
 
     test.use({
         permissions: ['clipboard-write', 'clipboard-read']
     })
     
-    test('Open Terminal', async ({ cApp }) => {
-        const terminal = await cApp.theiaApp.openTerminal(TheiaTerminal);
+    test('Open Terminal', async ({ rustApp }) => {
+        const terminal = await rustApp.theiaApp.openTerminal(TheiaTerminal);
         await expect(terminal.page.locator(terminal.viewSelector)).toBeVisible();
         expect(await terminal.isTabVisible()).toBe(true);
         expect(await terminal.isDisplayed()).toBe(true);
         expect(await terminal.isActive()).toBe(true);
     });
 
-    test('Terminal command: ls', async ({ cApp }) => {
-        const terminal = await cApp.theiaApp.openTerminal(TheiaTerminal);
+    test('Terminal command: ls', async ({ rustApp }) => {
+        const terminal = await rustApp.theiaApp.openTerminal(TheiaTerminal);
         await expect(terminal.page.locator(terminal.viewSelector)).toBeVisible();
         const fileName = testPrefix + 'Test1';
-        await cApp.createNewFile(fileName);
+        await rustApp.createNewFile(fileName);
         await terminal.submit('ls');
         const contents = await terminal.contents();
         expect(contents).toContain(fileName);
     });
 
-    test('Terminal command: touch', async ({ cApp }) => {
-        const terminal = await cApp.theiaApp.openTerminal(TheiaTerminal);
+    test('Terminal command: touch', async ({ rustApp }) => {
+        const terminal = await rustApp.theiaApp.openTerminal(TheiaTerminal);
         await expect(terminal.page.locator(terminal.viewSelector)).toBeVisible();
         const fileName = testPrefix + 'Test2';
         await terminal.submit('touch ' + fileName);
         await terminal.submit('ls');
         const contents = await terminal.contents();
         expect(contents).toContain(fileName);
-        const explorer = await cApp.theiaApp.openView(TheiaExplorerView);
+        const explorer = await rustApp.theiaApp.openView(TheiaExplorerView);
         await explorer.refresh();
         expect(await explorer.existsFileNode(fileName)).toBe(true);
     });
 
-    test('Terminal command: rm', async ({ cApp }) => {
-        const terminal = await cApp.theiaApp.openTerminal(TheiaTerminal);
+    test('Terminal command: rm', async ({ rustApp }) => {
+        const terminal = await rustApp.theiaApp.openTerminal(TheiaTerminal);
         const fileName = testPrefix + 'Test3';
         await terminal.submit('touch ' + fileName);
         await terminal.submit('rm ' + fileName);
         await terminal.submit('ls');
         const contents = await terminal.contents();
         expect(contents).not.toContain(fileName);
-        const explorer = await cApp.theiaApp.openView(TheiaExplorerView);
+        const explorer = await rustApp.theiaApp.openView(TheiaExplorerView);
         await explorer.refresh();
         expect(await explorer.existsFileNode(fileName)).toBe(false);
     });
 
-    test('Terminal multiple tabs', async ({ cApp }) => {
-        const terminal1 = await cApp.theiaApp.openTerminal(TheiaTerminal);
-        const terminal2 = await cApp.theiaApp.openTerminal(TheiaTerminal);
+    test('Terminal multiple tabs', async ({ rustApp }) => {
+        const terminal1 = await rustApp.theiaApp.openTerminal(TheiaTerminal);
+        const terminal2 = await rustApp.theiaApp.openTerminal(TheiaTerminal);
         expect(await terminal1.isTabVisible()).toBe(true);
         expect(await terminal2.isTabVisible()).toBe(true);
         await terminal1.activate();
@@ -74,8 +75,8 @@ test.describe('Theia IDE Terminal Tests', () => {
 
 
 
-    test.afterAll(async ({ cApp }) => {
-        const terminal = await cApp.theiaApp.openTerminal(TheiaTerminal);
+    test.afterAll(async ({ rustApp }) => {
+        const terminal = await rustApp.theiaApp.openTerminal(TheiaTerminal);
         await terminal.submit('rm -rf ${testPrefix}*');
     });
 

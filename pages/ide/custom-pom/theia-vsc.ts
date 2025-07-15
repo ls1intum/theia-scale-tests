@@ -27,7 +27,7 @@ export class TheiaVSCView extends TheiaView {
 
     async commit(message: string): Promise<void> {
         await this.page.locator('.theia-scm-main-container').locator('.theia-scm-input-message').fill(message);
-        const commitButton = await this.page.locator('.codicon-check').getByTitle('Commit');
+        const commitButton = await this.page.locator('.theia-sidepanel-toolbar').locator('.codicon-check');
         await commitButton.click();
         const commitDialog = await this.page.waitForSelector('div[class="dialogBlock"]');
         await commitDialog.press('Enter');

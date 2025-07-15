@@ -7,7 +7,7 @@ import { TheiaApp } from './theia-pom/theia-app';
  */
 export class IDEPage {
     readonly page: Page;
-    readonly theiaApp: TheiaApp; // C Instance
+    readonly theiaApp: TheiaApp;
     readonly baseURL: string;
 
     constructor(page: Page, app: TheiaApp, baseURL: string) {

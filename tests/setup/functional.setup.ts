@@ -13,17 +13,36 @@ import { error } from 'console';
  */
 setup('Get IDE URL for C', async ({ }, testInfo) => {
   setup.slow();
-  const instances = process.env.NUM_INSTANCES ? parseInt(process.env.NUM_INSTANCES) : 1;
-  const setupPromises = Array.from({ length: instances }, (_, i) => {
-    return setupIDE('C', testInfo, i);
-  });
+  await setupIDE('C', testInfo);
+}); 
 
-  await Promise.all(setupPromises);
+setup('Get IDE URL for Java', async ({ }, testInfo) => {
+  setup.slow();
+  await setupIDE('Java', testInfo);
+}); 
+
+setup('Get IDE URL for Python', async ({ }, testInfo) => {
+  setup.slow();
+  await setupIDE('Python', testInfo);
+}); 
+
+setup('Get IDE URL for Rust', async ({ }, testInfo) => {
+  setup.slow();
+  await setupIDE('Rust', testInfo);
+}); 
+
+setup('Get IDE URL for OCaml', async ({ }, testInfo) => {
+  setup.slow();
+  await setupIDE('Ocaml', testInfo);
+}); 
+
+setup('Get IDE URL for JavaScript', async ({ }, testInfo) => {
+  setup.slow();
+  await setupIDE('Javascript', testInfo);
 }); 
 
 
-
-async function setupIDE(language: string, testInfo: TestInfo, identifier: number) {
+async function setupIDE(language: string, testInfo: TestInfo) {
   const browser = await chromium.launch();
   let context;
 
@@ -54,8 +73,9 @@ async function setupIDE(language: string, testInfo: TestInfo, identifier: number
   if (!fs.existsSync(testDataDir)) {
     fs.mkdirSync(testDataDir, { recursive: true });
   }
-  fs.writeFileSync(path.join(testDataDir, 'ide-url-' + identifier + '.txt'), ideURL);
+  fs.writeFileSync(path.join(testDataDir, 'ide-url-' + language.toLowerCase() + '.txt'), ideURL);
 
   await context.close();
   await browser.close();
 }
+

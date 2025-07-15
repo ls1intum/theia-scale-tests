@@ -99,7 +99,7 @@ export const test = base.extend<TheiaFixtures>({
         await page.close();
     },
     jsApp: async ({ browser }, use) => {
-        const urlPath = path.join(process.cwd(), 'test-data/functional', 'ide-url-js.txt');
+        const urlPath = path.join(process.cwd(), 'test-data/functional', 'ide-url-javascript.txt');
         const ideURL = fs.readFileSync(urlPath, 'utf8');
         const page = await browser.newPage();
         const workspace = new TheiaWorkspace();

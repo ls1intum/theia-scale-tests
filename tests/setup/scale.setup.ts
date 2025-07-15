@@ -10,10 +10,20 @@ import path from 'path';
  * @tag slow (starting the instance takes a while)
  * @description This function automates the starting process for the LandingPage UI.
  */
+const instances = process.env.NUM_INSTANCES ? parseInt(process.env.NUM_INSTANCES) : 1;
+
+//TODO: Remove skip
+setup.skip('Start ' + instances + ' instances', async ({ }, testInfo) => {
+  setup.slow();
+  const setupPromises = Array.from({ length: instances }, (_, i) => {
+    return setupIDE("Java", testInfo, i);
+  });
+
+  await Promise.all(setupPromises);
+}); 
 
 
-
-async function setupIDE(language: string, testInfo: TestInfo) {
+async function setupIDE(language: string, testInfo: TestInfo, identifier: number) {
   const browser = await chromium.launch();
   let context;
 
@@ -44,7 +54,7 @@ async function setupIDE(language: string, testInfo: TestInfo) {
   if (!fs.existsSync(testDataDir)) {
     fs.mkdirSync(testDataDir, { recursive: true });
   }
-  fs.writeFileSync(path.join(testDataDir, 'ide-url-' + language.toLowerCase() + '.txt'), ideURL);
+  fs.writeFileSync(path.join(testDataDir, 'ide-url-' + identifier + '.txt'), ideURL);
 
   await context.close();
   await browser.close();
