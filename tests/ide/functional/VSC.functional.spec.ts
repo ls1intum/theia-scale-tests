@@ -11,7 +11,10 @@ test.describe('Theia IDE VSC Tests', () => {
         permissions: ['clipboard-write', 'clipboard-read']
     })
 
+    const workspacePath = 'vsc-test';
+
     test.beforeAll(async ({ pythonApp }) => {
+        await pythonApp.createAndOpenWorkspace(workspacePath);
         const terminal = await pythonApp.theiaApp.openTerminal(TheiaTerminal);
         await terminal.submit('git init');
         await terminal.submit('git config --global user.email "test@test.com"');
@@ -19,6 +22,11 @@ test.describe('Theia IDE VSC Tests', () => {
         await terminal.submit('git status');
         const contents = await terminal.contents();
         await expect(contents).not.toContain('not a git repository');
+    });
+
+    test.beforeEach(async ({ pythonApp }) => {
+        await pythonApp.openWorkspace(workspacePath);
+        await pythonApp.theiaApp.workspace.setPath("/home/project/" + workspacePath);
     });
     
     test('Commit', async ({ pythonApp }) => {

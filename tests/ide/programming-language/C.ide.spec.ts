@@ -21,6 +21,17 @@ test.describe('C Language Test', () => {
     const expectedResult = readFileSync(expectedResultPath, 'utf8');
     const fileName = testPrefix + 'Test1.c';
 
+    const workspacePath = 'c-test';
+
+    test.beforeAll(async ({ cApp }) => {
+        await cApp.createAndOpenWorkspace(workspacePath);
+    });
+
+    test.beforeEach(async ({ cApp }) => {
+        await cApp.openWorkspace(workspacePath);
+        await cApp.theiaApp.workspace.setPath("/home/project/" + workspacePath);
+    });
+
     test('C modules installed', async ({ cApp }) => {
         const terminal = await cApp.theiaApp.openTerminal(TheiaTerminal);
         await terminal.submit('gcc');

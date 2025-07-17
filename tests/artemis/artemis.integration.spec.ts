@@ -1,4 +1,4 @@
-import { Page } from '@playwright/test';
+import { BrowserContext, chromium, Cookie, Page } from '@playwright/test';
 import { test, expect } from '../../fixtures/theia.fixture';
 import { ExercisePage } from '../../pages/artemis/ExercisePage';
 import { IDEPage } from '../../pages/ide/IDEPage';
@@ -11,8 +11,8 @@ test.describe('Theia Artemis Integration', () => {
     
     let course: any;
     let exercise: any;
-    let theiaPage: IDEPage;
-    
+    let theiaURL: string;
+
     test.beforeAll(async ({ artemis }) => {
         await artemis.login(process.env.ARTEMIS_USER!, process.env.ARTEMIS_PWD!);
         course = await artemis.createSimpleCourse();
@@ -20,9 +20,12 @@ test.describe('Theia Artemis Integration', () => {
     });
 
     test('Creation of course and exercise is possible', async ({ }) => {
+        expect(course).toBeDefined();
+        expect(exercise).toBeDefined();
     });
 
-    test('Theia IDE loads from Artemis', async ({ artemis, landingPage }) => {
+    test.beforeAll('Theia IDE loads from Artemis', async ({ artemis, landingPage }) => {
+        test.slow();
         await artemis.login(process.env.ARTEMIS_USER!, process.env.ARTEMIS_PWD!);
         await artemis.page.goto(artemis.baseURL + `/courses/${course.id}/exercises/${exercise.id}`);
         const exercisePage = new ExercisePage(artemis.page, exercise.id);
@@ -39,12 +42,19 @@ test.describe('Theia Artemis Integration', () => {
         const workspace = new TheiaWorkspace();
         workspace.setPath("/home/project");
         const theiaApp = new TheiaApp(redirect, workspace, false);
-        theiaPage = new IDEPage(redirect, theiaApp, redirect.url());
+        const theiaPage = new IDEPage(redirect, theiaApp, redirect.url());
+        theiaURL = redirect.url();
         await theiaPage.waitForReady();
     });
 
-    test('Student clones using Scorpio', async ({ }) => {
-        const scorpioView = await theiaPage.theiaApp.openView(ScorpioView);
+    test.beforeEach(async ({ artemisTheia }) => {
+        artemisTheia.page.goto(theiaURL);
+        await artemisTheia.waitForReady();
+    });
+
+    test('Student clones using Scorpio', async ({ artemisTheia }) => {
+        await artemisTheia.directAuthenticateScorpio();
+        const scorpioView = await artemisTheia.theiaApp.openView(ScorpioView);
     });
 
     test('Student submits code using Scorpio', async ({ }) => {

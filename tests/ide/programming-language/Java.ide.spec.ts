@@ -21,6 +21,17 @@ test.describe('Java Language Test', () => {
     const expectedResult = readFileSync(expectedResultPath, 'utf8');
     const fileName = testPrefix + '.java';
 
+    const workspacePath = 'java-test';
+
+    test.beforeAll(async ({ javaApp }) => {
+        await javaApp.createAndOpenWorkspace(workspacePath);
+    });
+
+    test.beforeEach(async ({ javaApp }) => {
+        await javaApp.openWorkspace(workspacePath);
+        await javaApp.theiaApp.workspace.setPath("/home/project/" + workspacePath);
+    });
+
     test('Java modules installed', async ({ javaApp }) => {
         const terminal = await javaApp.theiaApp.openTerminal(TheiaTerminal);
         await terminal.submit('javac');

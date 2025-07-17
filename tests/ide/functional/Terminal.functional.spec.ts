@@ -10,6 +10,17 @@ test.describe('Theia IDE Terminal Tests', () => {
     test.use({
         permissions: ['clipboard-write', 'clipboard-read']
     })
+
+    const workspacePath = 'terminal-test';
+
+    test.beforeAll(async ({ rustApp }) => {
+        await rustApp.createAndOpenWorkspace(workspacePath);
+    });
+
+    test.beforeEach(async ({ rustApp }) => {
+        await rustApp.openWorkspace(workspacePath);
+        await rustApp.theiaApp.workspace.setPath("/home/project/" + workspacePath);
+    });
     
     test('Open Terminal', async ({ rustApp }) => {
         const terminal = await rustApp.theiaApp.openTerminal(TheiaTerminal);
@@ -46,14 +57,13 @@ test.describe('Theia IDE Terminal Tests', () => {
         const terminal = await rustApp.theiaApp.openTerminal(TheiaTerminal);
         const fileName = testPrefix + 'Test3';
         await terminal.submit('touch ' + fileName);
+        const explorer = await rustApp.theiaApp.openView(TheiaExplorerView);
+        expect(await explorer.existsFileNode(fileName)).toBe(true);
         await terminal.submit('rm ' + fileName);
         await terminal.submit('clear');
         await terminal.submit('ls');
         const contents = await terminal.contents();
-        expect(contents).not.toContain(fileName);
-        const explorer = await rustApp.theiaApp.openView(TheiaExplorerView);
-        await explorer.refresh();
-        expect(await explorer.existsFileNode(fileName)).toBe(false);
+        expect(contents).not.toContain(fileName);  
     });
 
     test('Terminal multiple tabs', async ({ rustApp }) => {

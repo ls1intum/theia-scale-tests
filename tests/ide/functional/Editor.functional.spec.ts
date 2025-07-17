@@ -16,6 +16,17 @@ test.describe('Theia IDE Editor Tests', () => {
     test.use({
         permissions: ['clipboard-write', 'clipboard-read']
     })
+
+    const workspacePath = 'editor-test';
+
+    test.beforeAll(async ({ cApp }) => {
+        await cApp.createAndOpenWorkspace(workspacePath);
+    });
+
+    test.beforeEach(async ({ cApp }) => {
+        await cApp.openWorkspace(workspacePath);
+        await cApp.theiaApp.workspace.setPath("/home/project/" + workspacePath);
+    });
     
     test('Create new File', async ({ cApp }) => {
         const fileName = testPrefix + 'Test1';
@@ -55,12 +66,12 @@ test.describe('Theia IDE Editor Tests', () => {
         await editor.activate();
         await editor.save();
         const explorer = await cApp.theiaApp.openView(TheiaExplorerView);
-        const oldNodes = (await explorer.visibleFileStatNodes()).length;
         expect(await explorer.existsFileNode(fileName)).toBe(true);
         await explorer.deleteNode(fileName);
-        await explorer.waitForFileNodesToDecrease(oldNodes);
-        const newNodes = (await explorer.visibleFileStatNodes()).length;
-        expect(oldNodes).toBe(newNodes + 1);
+        const terminal = await cApp.theiaApp.openTerminal(TheiaTerminal);
+        await terminal.submit('ls');
+        const contents = await terminal.contents();
+        expect(contents).not.toContain(fileName);
     });
 
     test('Create new File in folder', async ({ cApp }) => {

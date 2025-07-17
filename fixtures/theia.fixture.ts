@@ -16,6 +16,7 @@ interface TheiaFixtures {
     rustApp: IDEPage;
     jsApp: IDEPage;
     artemis: ArtemisPage;
+    artemisTheia: IDEPage;
 }
 
 export const test = base.extend<TheiaFixtures>({
@@ -119,6 +120,19 @@ export const test = base.extend<TheiaFixtures>({
         await page.goto(artemisURL);
         
         await use(artemisApp);
+        await page.close();
+    },
+    artemisTheia: async ({ browser }, use) => {
+        const page = await browser.newPage();
+        const workspace = new TheiaWorkspace();
+        workspace.setPath("/home/project");
+        const theiaApp = new TheiaApp(page, workspace, false);
+        const artemisTheia = new IDEPage(page, theiaApp, process.env.LANDINGPAGE_URL!);
+        await page.goto(process.env.LANDINGPAGE_URL!);
+        const landingPage = new LandingPage(page);
+        await landingPage.login(process.env.KEYCLOAK_USER!, process.env.KEYCLOAK_PWD!);
+        
+        await use(artemisTheia);
         await page.close();
     },
 

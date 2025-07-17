@@ -1,12 +1,13 @@
 import { Page, expect } from '@playwright/test';
 import { TheiaApp } from './theia-pom/theia-app';
+import { TheiaTerminal } from './theia-pom/theia-terminal';
 
 /**
  * Main IDE page class that composes all IDE components
  * Provides high-level operations that may involve multiple components
  */
 export class IDEPage {
-    readonly page: Page;
+    page: Page;
     readonly theiaApp: TheiaApp;
     readonly baseURL: string;
 
@@ -60,5 +61,25 @@ export class IDEPage {
         expect(await fileDialog.isVisible()).toBe(false);
     }
 
+    async createAndOpenWorkspace(workspacePath: string): Promise<void> {
+        const terminal = await this.theiaApp.openTerminal(TheiaTerminal);
+        await terminal.submit(`mkdir ${workspacePath}`);
+        await this.page.goto(this.page.url() + `/${workspacePath}`);
+        await this.page.reload();
+        await this.waitForReady();
+    }
 
+    async openWorkspace(workspacePath: string): Promise<void> {
+        await this.page.goto(this.page.url() + `/${workspacePath}`);
+        await this.page.reload();   
+        await this.waitForReady;
+    }
+
+    async directAuthenticateScorpio(): Promise<void> {
+        await this.page.locator('.dialogBlock').getByRole('button', { name: 'Allow' }).click(); 
+    }
+
+    setPage(page: Page) {
+        this.page = page;
+    }
 }
