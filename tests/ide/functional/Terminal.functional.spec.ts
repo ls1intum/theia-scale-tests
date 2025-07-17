@@ -47,6 +47,7 @@ test.describe('Theia IDE Terminal Tests', () => {
         const fileName = testPrefix + 'Test3';
         await terminal.submit('touch ' + fileName);
         await terminal.submit('rm ' + fileName);
+        await terminal.submit('clear');
         await terminal.submit('ls');
         const contents = await terminal.contents();
         expect(contents).not.toContain(fileName);

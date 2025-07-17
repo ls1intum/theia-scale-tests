@@ -35,7 +35,7 @@ test.describe('C Language Test', () => {
         await editor.focus();
         await pasteFromString(cApp.page, cTemplate);
         await editor.save();
-        await expect(editor.textContentOfLineContainingText("Language is working and loops are running!")).toBeDefined();
+        await expect(await editor.textContentOfLineContainingText("Language is working and loops are running!")).toBeDefined();
     });
 
     test('Compile C file', async ({ cApp }) => {
@@ -43,7 +43,7 @@ test.describe('C Language Test', () => {
         await terminal.submit(`gcc -o ${fileName}.out ${fileName}`);
         const explorer = await cApp.theiaApp.openView(TheiaExplorerView);
         await explorer.waitForVisible();
-        await expect(explorer.existsFileNode(`${fileName}.out`)).toBeTruthy();
+        await expect(await explorer.existsFileNode(`${fileName}.out`)).toBeTruthy();
     });
 
     test('Run C file', async ({ cApp }) => {

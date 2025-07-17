@@ -53,7 +53,12 @@ test.describe('IDE Search Tests', () => {
         await editor.save();
         const search = await jsApp.theiaApp.openView(TheiaSearchView);
         await search.search(randomWord!);
-        await expect(search.page.locator(search.viewSelector).locator('.resultContainer').getByText(randomWord!)).toBeVisible();
+        const result = search.page
+            .locator(search.viewSelector)
+            .locator('.resultContainer')
+            .getByText(randomWord!);
+        await result.waitFor();
+        await expect(result).toBeVisible();
     });
 
     test('Search for text using sidebar multiple files', async ({ jsApp }) => {

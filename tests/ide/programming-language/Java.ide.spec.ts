@@ -37,7 +37,7 @@ test.describe('Java Language Test', () => {
         await editor.focus();
         await pasteFromString(javaApp.page, javaTemplate);
         await editor.save();
-        await expect(editor.textContentOfLineContainingText("Language is working and loops are running!")).toBeDefined();
+        await expect(await editor.textContentOfLineContainingText("Language is working and loops are running!")).toBeDefined();
     });
 
     test('Compile Java file', async ({ javaApp }) => {
@@ -45,7 +45,7 @@ test.describe('Java Language Test', () => {
         await terminal.submit(`javac ${fileName}`);
         const explorer = await javaApp.theiaApp.openView(TheiaExplorerView);
         await explorer.waitForVisible();
-        await expect(explorer.existsFileNode(`${testPrefix}.class`)).toBeTruthy();
+        await expect(await explorer.existsFileNode(`${testPrefix}.class`)).toBeTruthy();
     });
 
     test('Run Java file', async ({ javaApp }) => {

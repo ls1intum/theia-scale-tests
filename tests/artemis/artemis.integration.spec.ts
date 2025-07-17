@@ -43,11 +43,11 @@ test.describe('Theia Artemis Integration', () => {
         await theiaPage.waitForReady();
     });
 
-    test('Student uses Scorpio', async ({ }) => {
+    test('Student clones using Scorpio', async ({ }) => {
         const scorpioView = await theiaPage.theiaApp.openView(ScorpioView);
     });
 
-    test('Student submits code', async ({ }) => {
+    test('Student submits code using Scorpio', async ({ }) => {
     });
 
     test.skip('check result', async ({ artemis }) => {
