@@ -27,7 +27,7 @@ jobs:
     - name: Install Playwright Browsers
       run: npx playwright install --with-deps
     - name: Run Playwright tests
-      run: npx playwright test --project=artemis --workers=10
+      run: npx playwright test --project=artemis --workers=1
     - uses: actions/upload-artifact@v4
       if: ${{ !cancelled() }}
       with:
