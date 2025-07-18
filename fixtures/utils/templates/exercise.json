@@ -21,7 +21,6 @@
     "programmingLanguage": "JAVA",
     "projectType": "PLAIN_MAVEN",
     "secondCorrectionEnabled": false,
-    "shortName": "theiatest",
     "showTestNamesToStudents": false,
     "solutionParticipation": {
         "type": "solution"

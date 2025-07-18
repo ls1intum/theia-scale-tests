@@ -4,6 +4,7 @@ import exerciseTemplate from '../../fixtures/utils/templates/exercise.json';
 import courseTemplate from '../../fixtures/utils/templates/course.json';
 import { v4 as uuidv4 } from 'uuid';
 import { ExercisePage } from './ExercisePage';
+import { courseName, exerciseName } from '../../fixtures/utils/constants';
 
 /**
  * Main IDE page class that composes all IDE components
@@ -73,7 +74,7 @@ export class ArtemisPage {
         const course = {
             ...courseTemplate,
             title: 'Theia Test Course -' + uuid,
-            shortName: 'testcourse' + uuid,
+            shortName: courseName + uuid,
             startDate: dayjs().subtract(2, 'hours'),
             endDate: dayjs().add(2, 'hours'),
         };
@@ -87,7 +88,7 @@ export class ArtemisPage {
         };
 
         const response = await this.page.request.post(this.baseURL + '/api/core/admin/courses', { multipart });
-        console.log(response.status());
+        console.log(await response.json());
         expect(response.ok()).toBe(true);
         return response.json();
     }
@@ -124,6 +125,7 @@ export class ArtemisPage {
         const exercise = {
             ...exerciseTemplate,
             course: course,
+            shortName: exerciseName,
             buildConfig: {
                 theiaImage: 'java-17-latest',
             },

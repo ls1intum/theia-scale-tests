@@ -76,7 +76,13 @@ export class IDEPage {
     }
 
     async directAuthenticateScorpio(): Promise<void> {
-        await this.page.locator('.dialogBlock').getByRole('button', { name: 'Allow' }).click(); 
+        const allowButton = this.page.locator('.dialogBlock').getByRole('button', { name: 'Allow' });
+    
+        if (await allowButton.isVisible({ timeout: 5000 })) {
+            await allowButton.click();
+        } else {
+            console.log('Scorpio authentication dialog not shown, skipping authentication.');
+        }
     }
 
     setPage(page: Page) {

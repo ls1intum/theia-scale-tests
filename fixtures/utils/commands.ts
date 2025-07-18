@@ -9,3 +9,8 @@ export const pasteFromString = async (page: Page, text: string) => {
       }, text);
     await page.keyboard.press(`${modifierKey}+V`);
 }
+
+export const deleteAll = async (page: Page) => {
+    await page.keyboard.press(`${modifierKey}+A`);
+    await page.keyboard.press('Delete');
+}

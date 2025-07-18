@@ -44,8 +44,16 @@ export default defineConfig({
   projects: [
     // Setup project for auth
     { 
-      name: 'auth-setup',
-      testMatch: '**/auth.setup.ts',
+      name: 'auth-keycloak-setup',
+      testMatch: '**/auth_keycloak_user.setup.ts',
+      use: {
+        storageState: undefined,
+      }
+    },
+    // Setup project for auth with Artemis user
+    { 
+      name: 'auth-artemis-setup',
+      testMatch: '**/auth_artemis_user.setup.ts',
       use: {
         storageState: undefined,
       }
@@ -56,9 +64,9 @@ export default defineConfig({
       name: 'functional-setup',
       testMatch: '**/functional.setup.ts',
       use: {
-        storageState: '.auth/user.json',
+        storageState: '.auth/keycloak_user.json',
       },
-      dependencies: ['auth-setup']
+      dependencies: ['auth-keycloak-setup']
     },
 
     // Setup project for Scale tests
@@ -66,9 +74,9 @@ export default defineConfig({
       name: 'scale-setup',
       testMatch: '**/scale.setup.ts',
       use: {
-        storageState: '.auth/user.json',
+        storageState: '.auth/keycloak_user.json',
       },
-      dependencies: ['auth-setup']
+      dependencies: ['auth-keycloak-setup']
     },
 
     // Main test projects
@@ -77,7 +85,7 @@ export default defineConfig({
       testMatch: /.*\.(functional|ide)\.spec\.ts/,
       use: {
         ...devices['Desktop Chrome'],
-        storageState: '.auth/user.json',
+        storageState: '.auth/keycloak_user.json',
         launchOptions: {
           slowMo: 500, //TODO: 500ms delay between actions as temp solution for slow UI
         },
@@ -92,7 +100,7 @@ export default defineConfig({
       workers: process.env.NUM_INSTANCES ? parseInt(process.env.NUM_INSTANCES) : 1,
       use: {
         ...devices['Desktop Chrome'],
-        storageState: '.auth/user.json',
+        storageState: '.auth/keycloak_user.json',
         launchOptions: {
           slowMo: 500, //TODO: 500ms delay between actions as temp solution for slow UI
         },
@@ -107,10 +115,12 @@ export default defineConfig({
       workers: process.env.NUM_INSTANCES ? parseInt(process.env.NUM_INSTANCES) : 1,
       use: {
         ...devices['Desktop Chrome'],
+        storageState: '.auth/artemis_user.json',
         launchOptions: {
           slowMo: 100, //TODO: 100ms delay between actions as temp solution for slow UI
         },
       },
+      dependencies: ['auth-artemis-setup']
     },
 
     // Local testing for functional tests

@@ -2,7 +2,7 @@ import { test as setup } from '@playwright/test';
 import { LandingPage } from '../../pages/landing/LandingPage';
 import path from 'path';
 
-const authFile = path.join(__dirname, '../../.auth/user.json');
+const authFile = path.join(__dirname, '../../.auth/keycloak_user.json');
 
 /**
  * @remarks

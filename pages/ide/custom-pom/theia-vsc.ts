@@ -1,4 +1,4 @@
-import { ElementHandle, expect } from '@playwright/test';
+import { ElementHandle, expect, Locator } from '@playwright/test';
 import { TheiaApp } from '../theia-pom/theia-app';
 import { TheiaDialog } from '../theia-pom/theia-dialog';
 import { TheiaMenuItem } from '../theia-pom/theia-menu-item';
@@ -33,19 +33,34 @@ export class TheiaVSCView extends TheiaView {
         await commitDialog.press('Enter');
     }
 
+    async commitAllandPush(message: string): Promise<void> {
+        await this.page.locator('.theia-scm-main-container').locator('.theia-scm-input-message').fill(message);
+        const commitButton = await this.page.locator('.theia-sidepanel-toolbar').locator('.codicon-check');
+        await commitButton.click();
+        const commitDialog = await this.page.waitForSelector('div[class="dialogBlock"]');
+        await commitDialog.press('Enter');
+        await this.push();
+    }
+
     async pull(): Promise<void> {
         const pullButton = await this.page.locator('.theia-scm-main-container').locator('.theia-scm-pull-button');
         await pullButton.click();
     }
 
     async push(): Promise<void> {
-        const pushButton = await this.page.locator('.theia-scm-main-container').locator('.theia-scm-push-button');
+        const moreActionsButton = await this.getMoreActionsButton();
+        await moreActionsButton.click();
+        const pushButton = await this.page.locator('li[data-command="git.push"]');
         await pushButton.click();   
     }
 
     async pushAll(): Promise<void> {
         const pushAllButton = await this.page.locator('.theia-scm-main-container').locator('.theia-scm-push-all-button');
         await pushAllButton.click();
+    }
+
+    getMoreActionsButton(): Locator {
+        return this.page.locator('.theia-sidepanel-toolbar').getByTitle('More Actions...');
     }
 
 }

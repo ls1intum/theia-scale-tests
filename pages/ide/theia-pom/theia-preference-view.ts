@@ -29,7 +29,8 @@ export const PreferenceIds = {
         RenderWhitespace: 'editor.renderWhitespace'
     },
     Explorer: {
-        AutoReveal: 'explorer.autoReveal'
+        AutoReveal: 'explorer.autoReveal',
+        CompactFolder: 'explorer.compactFolders'
     },
     DiffEditor: {
         MaxComputationTime: 'diffEditor.maxComputationTime'

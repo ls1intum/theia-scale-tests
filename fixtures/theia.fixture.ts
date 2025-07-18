@@ -128,9 +128,6 @@ export const test = base.extend<TheiaFixtures>({
         workspace.setPath("/home/project");
         const theiaApp = new TheiaApp(page, workspace, false);
         const artemisTheia = new IDEPage(page, theiaApp, process.env.LANDINGPAGE_URL!);
-        await page.goto(process.env.LANDINGPAGE_URL!);
-        const landingPage = new LandingPage(page);
-        await landingPage.login(process.env.KEYCLOAK_USER!, process.env.KEYCLOAK_PWD!);
         
         await use(artemisTheia);
         await page.close();
