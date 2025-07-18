@@ -48,7 +48,7 @@ async function setupIDE(language: string, testInfo: TestInfo) {
 
   if (testInfo.project.name !== 'local') {
     context = await browser.newContext({ 
-      storageState: '.auth/user.json'
+      storageState: '.auth/keycloak_user.json'
     });
   } else {
     context = await browser.newContext();

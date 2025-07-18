@@ -36,7 +36,8 @@ export const PreferenceIds = {
         MaxComputationTime: 'diffEditor.maxComputationTime'
     },
     Files: {
-        EnableTrash: 'files.enableTrash'
+        EnableTrash: 'files.enableTrash',
+        AutoSaveDelay: 'files.autoSaveDelay'
     }
 };
 

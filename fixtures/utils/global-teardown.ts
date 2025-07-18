@@ -10,9 +10,13 @@ import path from 'path';
 async function globalTeardown(config: FullConfig) {
   console.log('Running global teardown...');
 
-  const authFilePath = path.resolve(__dirname, '../.auth/user.json');
-  if (fs.existsSync(authFilePath)) {
-    fs.unlinkSync(authFilePath);
+  const keycloakAuthFilePath = path.resolve(__dirname, '../.auth/keycloak_user.json');
+  const artemisAuthFilePath = path.resolve(__dirname, '../.auth/artemis_user.json');
+  if (fs.existsSync(keycloakAuthFilePath)) {
+    fs.unlinkSync(keycloakAuthFilePath);
+  }
+  if (fs.existsSync(artemisAuthFilePath)) {
+    fs.unlinkSync(artemisAuthFilePath);
   }
 
   console.log('Global teardown completed.');

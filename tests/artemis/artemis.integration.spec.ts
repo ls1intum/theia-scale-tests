@@ -83,6 +83,9 @@ test.describe('Theia Artemis Integration', () => {
         const preferenceId = PreferenceIds.Explorer.CompactFolder;
         await preferences.setBooleanPreferenceById(preferenceId, false);
         await preferences.waitForModified(preferenceId);
+        const autoSaveDelay = PreferenceIds.Files.AutoSaveDelay;
+        await preferences.setStringPreferenceById(autoSaveDelay, "0");
+        await preferences.waitForModified(autoSaveDelay);
         await writeIntoFile("BubbleSort.java", bubbleSortTemplate, courseRepositoryName, artemisTheia);
         await writeIntoFile("MergeSort.java", mergeSortTemplate, courseRepositoryName, artemisTheia);
         //await artemisTheia.createNewFile(`${courseRepositoryName}/src/de/test/SortStrategy.java`);
@@ -95,7 +98,7 @@ test.describe('Theia Artemis Integration', () => {
         await artemis.login(process.env.ARTEMIS_USER!, process.env.ARTEMIS_PWD!);
         await artemis.page.goto(artemis.baseURL + `/courses/${course.id}/exercises/${exercise.id}`);
         const exercisePage = new ExercisePage(artemis.page, exercise.id);
-        await exercisePage.checkResultScore('15.38%');
+        await exercisePage.checkResultScore('15.4%');
     });
 
     test.afterAll(async ({ artemis }) => {

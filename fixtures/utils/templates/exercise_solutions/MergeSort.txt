@@ -2,7 +2,7 @@ package de.test;
 
 import java.util.*;
 
-public class MergeSort implements SortStrategy {
+public class MergeSort {
   
   /**
   * Wrapper method for the real MergeSort algorithm.
