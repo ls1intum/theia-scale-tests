@@ -14,7 +14,7 @@ import path from 'path';
 import { TheiaVSCView } from '../../pages/ide/custom-pom/theia-vsc';
 import { PreferenceIds, TheiaPreferenceView } from '../../pages/ide/theia-pom/theia-preference-view';
 
-test.describe('Theia Artemis Integration - No Scorpio', () => {
+test.describe('Theia Artemis Integration - Scorpio', () => {
     test.describe.configure({ mode: 'serial' });
 
     test.use({
@@ -71,7 +71,21 @@ test.describe('Theia Artemis Integration - No Scorpio', () => {
         expect(exercise).toBeDefined();
     });
 
-    test('Repository is cloned', async ({ artemisTheia }) => {
+    test('Scorpio is installed', async ({ artemisTheia }) => {
+        await artemisTheia.directAuthenticateScorpio();
+        const explorer = await artemisTheia.theiaApp.openView(TheiaExplorerView);
+        const directoryNode = await explorer.existsDirectoryNode(courseRepositoryName);
+        expect(directoryNode).toBe(true);
+    });
+
+    test('Scorpio shows Exercise Instructions', async ({ artemisTheia }) => {
+        await artemisTheia.directAuthenticateScorpio();
+        const explorer = await artemisTheia.theiaApp.openView(TheiaExplorerView);
+        const directoryNode = await explorer.existsDirectoryNode(courseRepositoryName);
+        expect(directoryNode).toBe(true);
+    });
+
+    test('Cloning via Scoripio', async ({ artemisTheia }) => {
         await artemisTheia.directAuthenticateScorpio();
         const explorer = await artemisTheia.theiaApp.openView(TheiaExplorerView);
         const directoryNode = await explorer.existsDirectoryNode(courseRepositoryName);
@@ -94,7 +108,7 @@ test.describe('Theia Artemis Integration - No Scorpio', () => {
         await VSC.commitAllandPush("Initial commit from Theia");
     });
 
-    test('check result on Artemis', async ({ artemis }) => {
+    test('Check Result on Scorpio', async ({ artemis }) => {
         await artemis.login(process.env.ARTEMIS_USER!, process.env.ARTEMIS_PWD!);
         await artemis.page.goto(artemis.baseURL + `/courses/${course.id}/exercises/${exercise.id}`);
         const exercisePage = new ExercisePage(artemis.page, exercise.id);
