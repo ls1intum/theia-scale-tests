@@ -64,13 +64,13 @@ export class IDEPage {
     async createAndOpenWorkspace(workspacePath: string): Promise<void> {
         const terminal = await this.theiaApp.openTerminal(TheiaTerminal);
         await terminal.submit(`mkdir ${workspacePath}`);
-        await this.page.goto(this.page.url() + `/${workspacePath}`);
+        await this.page.goto(this.baseURL + `/#/home/project/${workspacePath}`);
         await this.page.reload();
         await this.waitForReady();
     }
 
     async openWorkspace(workspacePath: string): Promise<void> {
-        await this.page.goto(this.page.url() + `/${workspacePath}`);
+        await this.page.goto(this.baseURL + `/#/home/project/${workspacePath}`);
         await this.page.reload();   
         await this.waitForReady;
     }
