@@ -62,15 +62,19 @@ export class IDEPage {
     }
 
     async createAndOpenWorkspace(workspacePath: string): Promise<void> {
+        const workspaceURL = this.getWorkspaceURL("");
+        await this.page.goto(workspaceURL);
+        await this.waitForReady();
+
         const terminal = await this.theiaApp.openTerminal(TheiaTerminal);
         await terminal.submit(`mkdir ${workspacePath}`);
-        await this.page.goto(this.baseURL + `/#/home/project/${workspacePath}`);
+        await this.page.goto(this.getWorkspaceURL(workspacePath));
         await this.page.reload();
         await this.waitForReady();
     }
 
     async openWorkspace(workspacePath: string): Promise<void> {
-        await this.page.goto(this.baseURL + `/#/home/project/${workspacePath}`);
+        await this.page.goto(this.getWorkspaceURL(workspacePath));
         await this.page.reload();   
         await this.waitForReady;
     }
@@ -87,5 +91,13 @@ export class IDEPage {
 
     setPage(page: Page) {
         this.page = page;
+    }
+
+    private getWorkspaceURL(workspacePath: string): string {
+        let url = this.page.url();
+        if (url.endsWith("/")) {
+            url = url.slice(0, -1);
+        }
+        return url.split('/#')[0] + `/#/home/project/${workspacePath}`;
     }
 }

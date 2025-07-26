@@ -87,8 +87,9 @@ test.describe('Theia IDE Terminal Tests', () => {
 
 
     test.afterAll(async ({ rustApp }) => {
+        await rustApp.openWorkspace("");
         const terminal = await rustApp.theiaApp.openTerminal(TheiaTerminal);
-        await terminal.submit('rm -rf ${testPrefix}*');
+        await terminal.submit(`rm -rf ${workspacePath}`);
     });
 
 });

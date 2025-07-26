@@ -65,7 +65,8 @@ test.describe('C Language Test', () => {
     });
 
     test.afterAll(async ({ cApp }) => {
+        await cApp.openWorkspace("");
         const terminal = await cApp.theiaApp.openTerminal(TheiaTerminal);
-        await terminal.submit(`rm -rf ${testPrefix}*`);
+        await terminal.submit(`rm -rf ${workspacePath}`);
     });
 });

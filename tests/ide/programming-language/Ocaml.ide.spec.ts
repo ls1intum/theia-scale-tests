@@ -67,7 +67,8 @@ test.describe('Ocaml Language Test', () => {
     });
 
     test.afterAll(async ({ ocamlApp }) => {
+        await ocamlApp.openWorkspace("");
         const terminal = await ocamlApp.theiaApp.openTerminal(TheiaTerminal);
-        await terminal.submit(`rm -rf ${testPrefix}*`);
+        await terminal.submit(`rm -rf ${workspacePath}`);
     });
 });

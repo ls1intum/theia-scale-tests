@@ -71,7 +71,12 @@ export class TheiaExplorerView extends TheiaView {
     override async activate(): Promise<void> {
         await super.activate();
         const viewElement = await this.viewElement();
-        await viewElement?.waitForSelector('.theia-TreeContainer');
+        try {
+            await viewElement?.waitForSelector('.theia-TreeContainer', { timeout: 3000 });
+        } catch (e) {
+            await this.page.locator(this.viewSelector).locator('.theia-ExpansionToggle').click();
+            await viewElement?.waitForSelector('.theia-TreeContainer', { timeout: 3000 });
+        }
     }
 
     async refresh(): Promise<void> {

@@ -59,7 +59,8 @@ test.describe('JavaScript Language Test', () => {
     });
 
     test.afterAll(async ({ jsApp }) => {
+        await jsApp.openWorkspace("");
         const terminal = await jsApp.theiaApp.openTerminal(TheiaTerminal);
-        await terminal.submit(`rm -rf ${testPrefix}*`);
+        await terminal.submit(`rm -rf ${workspacePath}`);
     });
 });

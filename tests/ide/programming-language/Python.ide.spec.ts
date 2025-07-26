@@ -67,7 +67,8 @@ test.describe('Python Language Test', () => {
     });
 
     test.afterAll(async ({ pythonApp }) => {
+        await pythonApp.openWorkspace("");
         const terminal = await pythonApp.theiaApp.openTerminal(TheiaTerminal);
-        await terminal.submit(`rm -rf ${testPrefix}*`);
+        await terminal.submit(`rm -rf ${workspacePath}`);
     });
 });
