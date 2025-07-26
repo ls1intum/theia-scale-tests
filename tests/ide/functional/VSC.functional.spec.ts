@@ -44,8 +44,9 @@ test.describe('Theia IDE VSC Tests', () => {
     });
 
     test.afterAll(async ({ pythonApp }) => {
+        await pythonApp.openWorkspace("");
         const terminal = await pythonApp.theiaApp.openTerminal(TheiaTerminal);
-        await terminal.submit('rm -rf ${testPrefix}*');
+        await terminal.submit(`rm -rf ${workspacePath}`);
         await terminal.submit('rm -rf .git');
 
     });

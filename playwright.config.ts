@@ -126,7 +126,7 @@ export default defineConfig({
     // Local testing for functional tests
     {
       name: 'local',
-      testMatch: /.*\.functional\.spec\.ts/,
+      testMatch: /.*\.(functional|ide)\.spec\.ts/,
       use: {
         baseURL: process.env.LOCAL_URL,
         launchOptions: {
