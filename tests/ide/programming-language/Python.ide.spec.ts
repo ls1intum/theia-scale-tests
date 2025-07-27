@@ -53,7 +53,7 @@ test.describe('Python Language Test', () => {
 
     test('Compile Python file', async ({ pythonApp }) => {
         const terminal = await pythonApp.theiaApp.openTerminal(TheiaTerminal);
-        await terminal.submit(`python3 ${fileName}`);
+        await terminal.submit(`python3 -m py_compile ${fileName}`);
         const explorer = await pythonApp.theiaApp.openView(TheiaExplorerView);
         await explorer.waitForVisible();
         await expect(await explorer.existsDirectoryNode(`__pycache__`)).toBeTruthy();
