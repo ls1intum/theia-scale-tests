@@ -73,9 +73,8 @@ test.skip('Theia Artemis Integration - Scorpio', () => {
 
     test('Scorpio is installed', async ({ artemisTheia }) => {
         await artemisTheia.directAuthenticateScorpio();
-        const explorer = await artemisTheia.theiaApp.openView(TheiaExplorerView);
-        const directoryNode = await explorer.existsDirectoryNode(courseRepositoryName);
-        expect(directoryNode).toBe(true);
+        const scorpio = await artemisTheia.theiaApp.openView(ScorpioView);
+        await scorpio.activate();
     });
 
     test('Scorpio shows Exercise Instructions', async ({ artemisTheia }) => {
