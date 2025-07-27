@@ -46,7 +46,7 @@ test.describe('Theia Artemis Integration - No Scorpio', () => {
         await artemis.page.goto(artemis.baseURL + `/courses/${course.id}/exercises/${exercise.id}`);
         const exercisePage = new ExercisePage(artemis.page, exercise.id);
         await exercisePage.startParticipation();
-
+        await exercisePage.page.waitForTimeout(3000);
         const [redirect] = await Promise.all([artemis.page.context().waitForEvent('page'), exercisePage.openInOnlineIDE()]);
         await redirect.waitForURL(/.*#\/home\/project/); //signalizes that theia session is loading
 
@@ -109,7 +109,7 @@ test.describe('Theia Artemis Integration - No Scorpio', () => {
 });
 
 async function writeIntoFile(fileName: string, content: string, courseRepositoryName: string, artemisTheia: IDEPage) {
-    const editor = await artemisTheia.theiaApp.openEditor(`${courseRepositoryName}/src/de/test/${fileName}`, TheiaTextEditor);
+    const editor = await artemisTheia.theiaApp.openEditor(`${courseRepositoryName}/src/test/${fileName}`, TheiaTextEditor);
     await editor.activate();
     await editor.focus();
     await deleteAll(editor.page);
