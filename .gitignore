@@ -14,4 +14,4 @@ node_modules/
 /.auth/
 playwright.env
 /test-data/
-
+/user-data/

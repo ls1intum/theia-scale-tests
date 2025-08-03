@@ -1,2 +1,2 @@
-export const courseName = "theiatestcourse";
-export const exerciseName = "theiatestexercise";
+export const courseName = "ttc";
+export const exerciseName = "tte";
