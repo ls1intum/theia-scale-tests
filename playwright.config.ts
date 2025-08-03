@@ -119,7 +119,7 @@ export default defineConfig({
         storageState: '.auth/artemis_user.json',
         launchOptions: {
           slowMo: 100, //TODO: 100ms delay between actions as temp solution for slow UI
-          headless: false,
+          headless: true,
           args: [
             '--disable-web-security',
             '--disable-site-isolation-trials',

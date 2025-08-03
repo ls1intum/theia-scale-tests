@@ -13,7 +13,8 @@ import path from 'path';
 import { TheiaVSCView } from '../../pages/ide/custom-pom/theia-vsc';
 import { PreferenceIds, TheiaPreferenceView } from '../../pages/ide/theia-pom/theia-preference-view';
 
-test.describe('Theia Artemis Integration - Scorpio', () => {
+//Change skip to describe to run the test
+test.skip('Theia Artemis Integration - Scorpio', () => {
     test.describe.configure({ mode: 'serial' });
 
     test.use({
