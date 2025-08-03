@@ -1,0 +1,19 @@
+name: Artillery Load Test
+ 
+on:
+  push:
+    branches:
+      - main
+ 
+jobs:
+  artillery:
+    runs-on: ubuntu-latest
+ 
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+ 
+      - name: Execute load tests
+        uses: artilleryio/action-cli@v1
+        with:
+          command: run tests/ide/scalable/artillery/Artillery.ts

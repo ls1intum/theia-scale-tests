@@ -42,6 +42,10 @@ This repository provides E2E integration tests for the [Theia Cloud IDE](https:/
   ```bash
   NUM_INSTANCE=100 npx playwright test --project=scale
   ```
+  To run the Artillery.io tests, run:
+  ```bash
+  npx artillery run tests/ide/scalable/artillery/Artillery.ts
+  ```
 
 | Project Identifier | Description                                                                                                     | Status |
 |--------------------|-----------------------------------------------------------------------------------------------------------------|--------|
