@@ -1,12 +1,12 @@
 import { test, expect } from '@playwright/test';
 import path from 'path';
 
-const numUsers = parseInt(process.env.NUM_USERS || '1', 10);
+const numUsers = parseInt(process.env.NUM_INSTANCES!, 10);
 
 // Generate an array of test conditions
 const testConditions = Array.from({ length: numUsers }, (_, i) => ({ id: i }));
 
-/*
+//IF we need to use differnet users, login here with each user
 test.describe.parallel('Scalable Virtual Student Tests', () => {
   for (const condition of testConditions) {
     test(`Virtual student #${condition.id + 1}`, async ({ page }) => {
@@ -18,4 +18,3 @@ test.describe.parallel('Scalable Virtual Student Tests', () => {
     });
   }
 });
-*/
