@@ -2,8 +2,9 @@ name: Artillery Load Test
  
 on:
   push:
-    branches:
-      - main
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
  
 jobs:
   artillery:
