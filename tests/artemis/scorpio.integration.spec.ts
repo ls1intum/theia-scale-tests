@@ -3,7 +3,9 @@ import { ExercisePage } from '../../pages/artemis/ExercisePage';
 import { IDEPage } from '../../pages/ide/IDEPage';
 import { TheiaApp } from '../../pages/ide/theia-pom/theia-app';
 import { TheiaWorkspace } from '../../pages/ide/theia-pom/theia-workspace';
+import { ScorpioView } from '../../pages/ide/custom-pom/scorpio';
 import { TheiaExplorerView } from '../../pages/ide/theia-pom/theia-explorer-view';
+import { courseName, exerciseName } from '../../fixtures/utils/constants';
 import { TheiaTextEditor } from '../../pages/ide/theia-pom/theia-text-editor';
 import { deleteAll, pasteFromString } from '../../fixtures/utils/commands';
 import { readFileSync } from 'fs';
@@ -11,7 +13,8 @@ import path from 'path';
 import { TheiaVSCView } from '../../pages/ide/custom-pom/theia-vsc';
 import { PreferenceIds, TheiaPreferenceView } from '../../pages/ide/theia-pom/theia-preference-view';
 
-test.describe('Theia Artemis Integration - No Scorpio', () => {
+//Change skip to describe to run the test
+test.skip('Theia Artemis Integration - Scorpio', () => {
     test.describe.configure({ mode: 'serial' });
 
     test.use({
@@ -43,7 +46,7 @@ test.describe('Theia Artemis Integration - No Scorpio', () => {
         await artemis.page.goto(artemis.baseURL + `/courses/${course.id}/exercises/${exercise.id}`);
         const exercisePage = new ExercisePage(artemis.page, exercise.id);
         await exercisePage.startParticipation();
-        await exercisePage.page.waitForTimeout(3000);
+
         const [redirect] = await Promise.all([artemis.page.context().waitForEvent('page'), exercisePage.openInOnlineIDE()]);
         await redirect.waitForURL(/.*#\/home\/project/); //signalizes that theia session is loading
 
@@ -68,7 +71,31 @@ test.describe('Theia Artemis Integration - No Scorpio', () => {
         expect(exercise).toBeDefined();
     });
 
-    test('Repository is cloned', async ({ artemisTheia }) => {
+    test('Scorpio is installed', async ({ artemisTheia }) => {
+        await artemisTheia.directAuthenticateScorpio();
+        const scorpio = await artemisTheia.theiaApp.openView(ScorpioView);
+        await scorpio.activate();
+    });
+
+    test('Scorpio shows Exercise Instructions', async ({ artemisTheia }) => {
+        await artemisTheia.directAuthenticateScorpio();
+        const scorpio = await artemisTheia.theiaApp.openView(ScorpioView);
+        await scorpio.activate();
+        //await page.locator('main').locator('submit-button').click();
+        const frame = artemisTheia.page.frameLocator('iframe');
+        await artemisTheia.page.evaluate(() => {
+            const iframe = document.querySelector('iframe');
+            if (iframe) iframe.removeAttribute('sandbox');
+            iframe!.src = iframe!.src;
+          });
+          
+        //await artemisTheia.page.pause();
+        await artemisTheia.page.locator('submit-button').click();
+        await frame.locator('main').waitFor({ state: 'visible' });
+        await artemisTheia.page.getByText("Sorting with the Strategy Pattern").waitFor({ state: 'visible' });
+    });
+
+    test('Cloning via Scoripio', async ({ artemisTheia }) => {
         await artemisTheia.directAuthenticateScorpio();
         const explorer = await artemisTheia.theiaApp.openView(TheiaExplorerView);
         const directoryNode = await explorer.existsDirectoryNode(courseRepositoryName);
@@ -91,7 +118,7 @@ test.describe('Theia Artemis Integration - No Scorpio', () => {
         await VSC.commitAllandPush("Initial commit from Theia");
     });
 
-    test('check result on Artemis', async ({ artemis }) => {
+    test('Check Result on Scorpio', async ({ artemis }) => {
         await artemis.login(process.env.ARTEMIS_USER!, process.env.ARTEMIS_PWD!);
         await artemis.page.goto(artemis.baseURL + `/courses/${course.id}/exercises/${exercise.id}`);
         const exercisePage = new ExercisePage(artemis.page, exercise.id);
@@ -106,7 +133,7 @@ test.describe('Theia Artemis Integration - No Scorpio', () => {
 });
 
 async function writeIntoFile(fileName: string, content: string, courseRepositoryName: string, artemisTheia: IDEPage) {
-    const editor = await artemisTheia.theiaApp.openEditor(`${courseRepositoryName}/src/test/${fileName}`, TheiaTextEditor);
+    const editor = await artemisTheia.theiaApp.openEditor(`${courseRepositoryName}/src/de/test/${fileName}`, TheiaTextEditor);
     await editor.activate();
     await editor.focus();
     await deleteAll(editor.page);

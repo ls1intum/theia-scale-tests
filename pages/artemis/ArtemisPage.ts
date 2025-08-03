@@ -73,7 +73,7 @@ export class ArtemisPage {
         const uuid = uuidv4().replace(/-/g, '').slice(0, 12);
         const course = {
             ...courseTemplate,
-            title: 'Theia Test Course -' + uuid,
+            title: 'Theia Test Course ' + uuid,
             shortName: courseName + uuid,
             startDate: dayjs().subtract(2, 'hours'),
             endDate: dayjs().add(2, 'hours'),
@@ -131,6 +131,7 @@ export class ArtemisPage {
             },
         };
         const response = await this.page.request.post(this.baseURL + `/api/programming/programming-exercises/setup`, { data: exercise });
+        console.log(await response.json());
         expect(response.ok()).toBe(true);
         return response.json();
     }
