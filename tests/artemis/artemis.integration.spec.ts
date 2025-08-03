@@ -1,12 +1,9 @@
-import { BrowserContext, chromium, Cookie, Page } from '@playwright/test';
 import { test, expect } from '../../fixtures/theia.fixture';
 import { ExercisePage } from '../../pages/artemis/ExercisePage';
 import { IDEPage } from '../../pages/ide/IDEPage';
 import { TheiaApp } from '../../pages/ide/theia-pom/theia-app';
 import { TheiaWorkspace } from '../../pages/ide/theia-pom/theia-workspace';
-import { ScorpioView } from '../../pages/ide/custom-pom/scorpio';
 import { TheiaExplorerView } from '../../pages/ide/theia-pom/theia-explorer-view';
-import { courseName, exerciseName } from '../../fixtures/utils/constants';
 import { TheiaTextEditor } from '../../pages/ide/theia-pom/theia-text-editor';
 import { deleteAll, pasteFromString } from '../../fixtures/utils/commands';
 import { readFileSync } from 'fs';

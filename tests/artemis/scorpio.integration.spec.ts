@@ -1,4 +1,3 @@
-import { BrowserContext, chromium, Cookie, Page } from '@playwright/test';
 import { test, expect } from '../../fixtures/theia.fixture';
 import { ExercisePage } from '../../pages/artemis/ExercisePage';
 import { IDEPage } from '../../pages/ide/IDEPage';
@@ -14,7 +13,7 @@ import path from 'path';
 import { TheiaVSCView } from '../../pages/ide/custom-pom/theia-vsc';
 import { PreferenceIds, TheiaPreferenceView } from '../../pages/ide/theia-pom/theia-preference-view';
 
-test.skip('Theia Artemis Integration - Scorpio', () => {
+test.describe('Theia Artemis Integration - Scorpio', () => {
     test.describe.configure({ mode: 'serial' });
 
     test.use({
@@ -79,9 +78,20 @@ test.skip('Theia Artemis Integration - Scorpio', () => {
 
     test('Scorpio shows Exercise Instructions', async ({ artemisTheia }) => {
         await artemisTheia.directAuthenticateScorpio();
-        const explorer = await artemisTheia.theiaApp.openView(TheiaExplorerView);
-        const directoryNode = await explorer.existsDirectoryNode(courseRepositoryName);
-        expect(directoryNode).toBe(true);
+        const scorpio = await artemisTheia.theiaApp.openView(ScorpioView);
+        await scorpio.activate();
+        //await page.locator('main').locator('submit-button').click();
+        const frame = artemisTheia.page.frameLocator('iframe');
+        await artemisTheia.page.evaluate(() => {
+            const iframe = document.querySelector('iframe');
+            if (iframe) iframe.removeAttribute('sandbox');
+            iframe!.src = iframe!.src;
+          });
+          
+        //await artemisTheia.page.pause();
+        await artemisTheia.page.locator('submit-button').click();
+        await frame.locator('main').waitFor({ state: 'visible' });
+        await artemisTheia.page.getByText("Sorting with the Strategy Pattern").waitFor({ state: 'visible' });
     });
 
     test('Cloning via Scoripio', async ({ artemisTheia }) => {

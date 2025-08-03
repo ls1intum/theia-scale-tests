@@ -115,9 +115,16 @@ export default defineConfig({
       workers: process.env.NUM_INSTANCES ? parseInt(process.env.NUM_INSTANCES) : 1,
       use: {
         ...devices['Desktop Chrome'],
+        bypassCSP: true,
         storageState: '.auth/artemis_user.json',
         launchOptions: {
           slowMo: 100, //TODO: 100ms delay between actions as temp solution for slow UI
+          headless: false,
+          args: [
+            '--disable-web-security',
+            '--disable-site-isolation-trials',
+            '--disable-features=IsolateOrigins,site-per-process',
+          ]
         },
       },
       dependencies: ['auth-artemis-setup']
