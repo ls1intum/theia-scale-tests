@@ -9,6 +9,10 @@ on:
 jobs:
   artillery:
     runs-on: ubuntu-latest
+    env:
+      KEYCLOAK_USER: ${{ secrets.KEYCLOAK_USER }}
+      KEYCLOAK_PWD: ${{ secrets.KEYCLOAK_PWD }}
+      LANDINGPAGE_URL: ${{ vars.LANDINGPAGE_URL }}
  
     steps:
       - name: Checkout repository
