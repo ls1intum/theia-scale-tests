@@ -73,3 +73,9 @@ This repository provides E2E integration tests for the [Theia Cloud IDE](https:/
   - The tests safe the URL for each instance in a text file under __/test-data__ for debugging and to access them in the tests
   - Tests are intended to run on the production environment (https://theia.artemis.cit.tum.de)
     - As tests include testing of all available programming languages: local images for each language can be found here: https://github.com/orgs/ls1intum/packages?tab=packages&q=theia
+
+## Info
+
+This repository contains code from:
+ - Eclipse Theia: https://github.com/eclipse-theia/theia/tree/master/examples/playwright
+ - Artemis: https://github.com/ls1intum/Artemis/tree/develop/src/test/playwright
