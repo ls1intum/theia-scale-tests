@@ -14,3 +14,7 @@ export const deleteAll = async (page: Page) => {
     await page.keyboard.press(`${modifierKey}+A`);
     await page.keyboard.press('Delete');
 }
+
+export const sleep = async (ms: number) => {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}

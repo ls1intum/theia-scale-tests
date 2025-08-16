@@ -1,6 +1,6 @@
 import { Page } from '@playwright/test';
 import { LandingPage } from '../../../../pages/landing/LandingPage';
-import { virtualStudent0, virtualStudent1 } from '../VirtualStudents';
+import { virtualStudent } from '../VirtualStudents';
 import dotenv from 'dotenv';
 import path from 'path';
 
@@ -29,12 +29,7 @@ async function runVirtualStudent(page: Page) {
     await page.goto(process.env.LANDINGPAGE_URL!);
     const landingPage = new LandingPage(page);
     await landingPage.login(process.env.KEYCLOAK_USER!, process.env.KEYCLOAK_PWD!);
-    await landingPage.launchLanguage('Python');
+    await landingPage.launchLanguage('Java');
     await page.waitForURL(/.*#\/home\/project/);
-    const condition = Math.floor(Math.random() * 2);
-    if (condition === 0) {
-        await virtualStudent0(page);
-    } else {
-        await virtualStudent1(page);
-    }
+    await virtualStudent(page);
 }

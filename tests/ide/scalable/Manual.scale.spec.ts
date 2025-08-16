@@ -1,5 +1,5 @@
 import { test } from '@playwright/test';
-import { virtualStudent0, virtualStudent1 } from './VirtualStudents';
+import { virtualStudent } from './VirtualStudents';
 import path from 'path';
 import fs from 'fs';
 
@@ -18,11 +18,7 @@ test.describe.parallel('Scalable Virtual Student Tests', () => {
         
         // Use the condition (e.g., ID to randomize behavior)
         console.log(`Running test for virtual student ${condition.id}`);
-        if (condition.id % 2 === 0) {
-            await virtualStudent0(page);
-        } else {
-            await virtualStudent1(page);
-        }
+        await virtualStudent(page);
     });
   }
 });
