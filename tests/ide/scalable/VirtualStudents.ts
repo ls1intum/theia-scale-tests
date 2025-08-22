@@ -10,6 +10,7 @@ import { TheiaExplorerView } from '../../../pages/ide/theia-pom/theia-explorer-v
 import { pasteFromString, sleep } from '../../../fixtures/utils/commands';
 import { readFileSync } from 'fs';
 import path from 'path';
+import { commit, createNewRandomFile, editBubbleSort, editMergeSort, useTerminal } from './Scenarios';
 
 const bubbleSortTemplatePath = path.resolve(__dirname, '../../../fixtures/utils/templates/exercise_solutions/BubbleSort.txt');
 const bubbleSortTemplate = readFileSync(bubbleSortTemplatePath, 'utf8');
@@ -19,7 +20,6 @@ const bubbleSortTemplate = readFileSync(bubbleSortTemplatePath, 'utf8');
  * @param page The page expects Theia to be loaded and the user to be logged in
  */
 export async function virtualStudent(page: Page) {
-    const testId = Math.floor(Math.random() * 2);
     await page.waitForURL(/.*#\/home\/project/);
     const workspace = new TheiaWorkspace();
     workspace.setPath("/home/project");
@@ -43,13 +43,13 @@ export async function virtualStudent(page: Page) {
     await preferences.setBooleanPreferenceById(preferenceId, false);
     await preferences.waitForModified(preferenceId);
 
+    const scenarios = [editBubbleSort, editMergeSort, commit, createNewRandomFile, useTerminal];
+
     await runWithTimeout(
         async () => {
-            //Step 3: Open the exercise
-            const editor = await theiaApp.openEditor(`src/de/BubbleSort.java`, TheiaTextEditor);
-            await editor.waitForVisible();
-            await editor.focus();
-            await pasteFromString(page, bubbleSortTemplate + (testId === 0 ? "" : "typo"));
+            //Step 3: Run a random scenario
+            const scenario = scenarios[Math.floor(Math.random() * scenarios.length)];
+            await scenario(theiaApp);
 
             //Step 4: Build the project
             await buildProject(terminal);
