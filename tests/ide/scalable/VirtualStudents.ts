@@ -1,34 +1,70 @@
-import { Page, expect } from '@playwright/test';
+import { Page, test } from '@playwright/test';
 import { TheiaApp } from '../../../pages/ide/theia-pom/theia-app';
 import { TheiaWorkspace } from '../../../pages/ide/theia-pom/theia-workspace';
 import { IDEPage } from '../../../pages/ide/IDEPage';
 import { TheiaTerminal } from '../../../pages/ide/theia-pom/theia-terminal';
 import { loadRepositoryURL, loadRepositoryName } from '../../../fixtures/utils/constants';
 import { PreferenceIds, TheiaPreferenceView } from '../../../pages/ide/theia-pom/theia-preference-view';
-import { TheiaTextEditor } from '../../../pages/ide/theia-pom/theia-text-editor';
 import { TheiaExplorerView } from '../../../pages/ide/theia-pom/theia-explorer-view';
-import { pasteFromString, sleep } from '../../../fixtures/utils/commands';
-import { readFileSync } from 'fs';
+import { sleep } from '../../../fixtures/utils/commands';
+import { changePreferences, commit, createAndEditRandomFile, createNewRandomFile, editBubbleSort, editClient, editContext, editMergeSort, editPolicy, editSortStrategy, openAboutPage, reloadPage, runTests, searchForWords, useTerminal } from './Scenarios';
+import { determinsticRun } from './Deterministic';
 import path from 'path';
-import { commit, createNewRandomFile, editBubbleSort, editMergeSort, useTerminal } from './Scenarios';
+import dotenv from 'dotenv';  
 
-const bubbleSortTemplatePath = path.resolve(__dirname, '../../../fixtures/utils/templates/exercise_solutions/BubbleSort.txt');
-const bubbleSortTemplate = readFileSync(bubbleSortTemplatePath, 'utf8');
+dotenv.config({ path: path.resolve(__dirname, '../../../../../playwright.env') });
+
+const deterministic: boolean = process.env.DETERMINISTIC ? parseInt(process.env.DETERMINISTIC!, 10) === 1 : false;
 
 /**
  * This function is used to simulate a virtual student in the IDE for the load tests.
  * @param page The page expects Theia to be loaded and the user to be logged in
  */
-export async function virtualStudent(page: Page) {
+export async function virtualStudent(page: Page, test) {
+
+  const { step } = test;
+  console.log("Starting virtual student");
+
+  await step("Waiting for theia to be loaded", async () => {
     await page.waitForURL(/.*#\/home\/project/);
+  });
+
+  let theiaApp: TheiaApp;
+  let idePage: IDEPage;
+  let terminal: TheiaTerminal;
+
+  await step("Setting up theia", async () => {
     const workspace = new TheiaWorkspace();
     workspace.setPath("/home/project");
-    const theiaApp = new TheiaApp(page, workspace, false);
-    const idePage = new IDEPage(page, theiaApp, page.url());
+    theiaApp = new TheiaApp(page, workspace, false);
+    idePage = new IDEPage(page, theiaApp, page.url());
+  });
 
-    //Step 1: Clone the repository    
-    const terminal = await theiaApp.openTerminal(TheiaTerminal);
+  await step("Cloning the repository", async () => {
+    terminal = await theiaApp.openTerminal(TheiaTerminal);
     await terminal.submit('git clone ' + loadRepositoryURL);
+    await terminal.close();
+  });
+
+  await step("Opening the explorer", async () => {
+    const explorer = await theiaApp.openView(TheiaExplorerView);
+    await explorer.waitForVisible();
+    await explorer.waitForFileNodesToIncrease(0);
+  });
+
+  await step("Opening the workspace", async () => {
+    await idePage.openWorkspace(loadRepositoryName);
+    await theiaApp.workspace.setPath("/home/project/" + loadRepositoryName);
+  });
+
+  await step("Opening the preferences", async () => {
+    const preferences = await theiaApp.openView(TheiaPreferenceView);
+    const preferenceId = PreferenceIds.Explorer.CompactFolder;
+    await preferences.setBooleanPreferenceById(preferenceId, false);
+    await preferences.waitForModified(preferenceId);
+  });
+
+  await step("Running the scenarios", async () => {
 
     const explorer = await theiaApp.openView(TheiaExplorerView);
     await explorer.waitForVisible();
@@ -43,27 +79,55 @@ export async function virtualStudent(page: Page) {
     await preferences.setBooleanPreferenceById(preferenceId, false);
     await preferences.waitForModified(preferenceId);
 
-    const scenarios = [editBubbleSort, editMergeSort, commit, createNewRandomFile, useTerminal];
+    const scenarios = [
+      editBubbleSort, 
+      editMergeSort, 
+      editClient,
+      editContext,
+      editPolicy,
+      editSortStrategy,
+      commit, 
+      createNewRandomFile, 
+      createAndEditRandomFile,
+      useTerminal, 
+      runTests,
+      searchForWords,
+      changePreferences,
+      openAboutPage,
+      reloadPage
+    ]; //TODO: Add more scenarios and make them more reusable
+
+    terminal = await theiaApp.openTerminal(TheiaTerminal);
+
+    if (deterministic) {
+      
+      await determinsticRun(theiaApp);
+
+    } else {
 
     await runWithTimeout(
         async () => {
             //Step 3: Run a random scenario
             const scenario = scenarios[Math.floor(Math.random() * scenarios.length)];
+            console.log("Running scenario: " + scenario.name);
             await scenario(theiaApp);
 
             //Step 4: Build the project
             await buildProject(terminal);
         },
-        parseInt(process.env.LOAD_TIMEOUT!, 10)
+        parseInt(process.env.LOAD_TIMEOUT!, 10) * 1000
       );
-    
+    }
+
+  });
 }
+
 
 /**
  * This function is used to build the project and wait for the build to finish.
  * @param terminal The terminal to use to build the project
  */
-async function buildProject(terminal: TheiaTerminal) {
+export async function buildProject(terminal: TheiaTerminal) {
     await terminal.activate();
     await terminal.focus();
     await terminal.submit('./gradlew build');

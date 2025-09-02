@@ -98,6 +98,7 @@ export default defineConfig({
       name: 'scale',
       testMatch: /.*\.scale\.spec\.ts/,
       workers: process.env.NUM_INSTANCES ? parseInt(process.env.NUM_INSTANCES) : 1,
+      timeout: process.env.LOAD_TIMEOUT ? parseInt(process.env.LOAD_TIMEOUT) * 1000 : 60 * 1000,
       use: {
         ...devices['Desktop Chrome'],
         storageState: '.auth/keycloak_user.json',

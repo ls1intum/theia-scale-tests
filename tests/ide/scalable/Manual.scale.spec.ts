@@ -18,7 +18,7 @@ test.describe.parallel('Scalable Virtual Student Tests', () => {
         
         // Use the condition (e.g., ID to randomize behavior)
         console.log(`Running test for virtual student ${condition.id}`);
-        await virtualStudent(page);
+        await virtualStudent(page, test);
     });
   }
 });

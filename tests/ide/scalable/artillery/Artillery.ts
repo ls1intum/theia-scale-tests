@@ -12,6 +12,10 @@ export const config = {
   target: process.env.LANDINGPAGE_URL!,
   engines: {
     playwright: {
+      launchOptions: {
+        slowMo: 500,
+        headless: false
+      },
       defaultNavigationTimeout: 300000,
     }
   },
@@ -25,11 +29,19 @@ export const scenarios = [{
   testFunction: runVirtualStudent
 }];
  
-async function runVirtualStudent(page: Page) {
+async function runVirtualStudent(page: Page, vuContext: any, events: any, test: any) {
+  const { step } = test;
+  console.log("Starting virtual student");
+
+  await step("Artillery: Waiting for theia to be loaded", async () => {
     await page.goto(process.env.LANDINGPAGE_URL!);
     const landingPage = new LandingPage(page);
     await landingPage.login(process.env.KEYCLOAK_USER!, process.env.KEYCLOAK_PWD!);
     await landingPage.launchLanguage('Java');
     await page.waitForURL(/.*#\/home\/project/);
-    await virtualStudent(page);
+  });
+
+  await virtualStudent(page, test);
 }
+
+
