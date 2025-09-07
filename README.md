@@ -17,7 +17,7 @@ This repository provides E2E integration tests for the [Theia Cloud IDE](https:/
 
 - Get the latest Theia IDE image from [here](https://ghcr.io/eclipse-theia/theia-ide/theia-ide:latest) and run it. Put the corresponding URL into the env file
 
-- Install dependencies and playwright
+- Install dependencies and playwright browser
   ```bash
   npm install
   ```
@@ -37,7 +37,7 @@ This repository provides E2E integration tests for the [Theia Cloud IDE](https:/
   npx playwright test --project=local
   ```
 
-- To run the scalability tests, run:
+- To run the load tests, run:
   ```bash
   npx playwright test --project=scale
   ```
@@ -45,10 +45,13 @@ This repository provides E2E integration tests for the [Theia Cloud IDE](https:/
   ```bash
   NUM_INSTANCE=100 npx playwright test --project=scale
   ```
-  To run the Artillery.io tests, run:
+  To run the tests using the Artillery.io framework, run:
   ```bash
   npx artillery run tests/ide/scalable/artillery/Artillery.ts
   ```
+
+- To run the MCP tests, follow the README in the [**MCP**](mcp/README.md) folder
+
 
 | Project Identifier | Description                                                                                                     | Status |
 |--------------------|-----------------------------------------------------------------------------------------------------------------|--------|
@@ -83,3 +86,4 @@ This repository provides E2E integration tests for the [Theia Cloud IDE](https:/
 This repository contains code from:
  - Eclipse Theia: https://github.com/eclipse-theia/theia/tree/master/examples/playwright
  - Artemis: https://github.com/ls1intum/Artemis/tree/develop/src/test/playwright
+ - MCP: https://github.com/modelcontextprotocol/quickstart-resources/tree/main/mcp-client-typescript

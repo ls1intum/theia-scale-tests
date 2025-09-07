@@ -11,6 +11,7 @@ node_modules/
 /tests/ide/scalable/artillery/dist/
 
 # For Local Development
+/mcp/automated/mcp.env
 /.auth/
 playwright.env
 /test-data/
