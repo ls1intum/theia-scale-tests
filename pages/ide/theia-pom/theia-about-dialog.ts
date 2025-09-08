@@ -14,13 +14,13 @@
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-only WITH Classpath-exception-2.0
 // *****************************************************************************
 
-import { TheiaDialog } from './theia-dialog';
+import { TheiaDialog } from "./theia-dialog";
 
 export class TheiaAboutDialog extends TheiaDialog {
-
-    override async isVisible(): Promise<boolean> {
-        const dialog = await this.page.$(`${this.blockSelector} .theia-aboutDialog`);
-        return !!dialog && dialog.isVisible();
-    }
-
+  override async isVisible(): Promise<boolean> {
+    const dialog = await this.page.$(
+      `${this.blockSelector} .theia-aboutDialog`,
+    );
+    return !!dialog && dialog.isVisible();
+  }
 }

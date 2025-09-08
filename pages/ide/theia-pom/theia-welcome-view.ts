@@ -13,19 +13,18 @@
 //
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-only WITH Classpath-exception-2.0
 
-import { TheiaApp } from './theia-app';
-import { TheiaView } from './theia-view';
-import { normalizeId } from './util';
+import { TheiaApp } from "./theia-app";
+import { TheiaView } from "./theia-view";
+import { normalizeId } from "./util";
 
 const TheiaWelcomeViewData = {
-    tabSelector: normalizeId('#shell-tab-getting.started.widget'),
-    viewSelector: normalizeId('#getting.started.widget'),
-    viewName: 'Welcome'
+  tabSelector: normalizeId("#shell-tab-getting.started.widget"),
+  viewSelector: normalizeId("#getting.started.widget"),
+  viewName: "Welcome",
 };
 
 export class TheiaWelcomeView extends TheiaView {
-
-    constructor(app: TheiaApp) {
-        super(TheiaWelcomeViewData, app);
-    }
+  constructor(app: TheiaApp) {
+    super(TheiaWelcomeViewData, app);
+  }
 }

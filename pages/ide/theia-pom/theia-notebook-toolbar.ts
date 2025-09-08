@@ -14,40 +14,42 @@
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-only WITH Classpath-exception-2.0
 // *****************************************************************************
 
-import { ElementHandle, Locator } from '@playwright/test';
-import { TheiaApp } from './theia-app';
-import { TheiaToolbar } from './theia-toolbar';
+import { ElementHandle, Locator } from "@playwright/test";
+import { TheiaApp } from "./theia-app";
+import { TheiaToolbar } from "./theia-toolbar";
 
 export class TheiaNotebookToolbar extends TheiaToolbar {
-    public readonly locator: Locator;
+  public readonly locator: Locator;
 
-    constructor(parentLocator: Locator, app: TheiaApp) {
-        super(app);
-        this.selector = 'div#notebook-main-toolbar';
-        this.locator = parentLocator.locator(this.selector);
-    }
+  constructor(parentLocator: Locator, app: TheiaApp) {
+    super(app);
+    this.selector = "div#notebook-main-toolbar";
+    this.locator = parentLocator.locator(this.selector);
+  }
 
-    protected override toolBarItemSelector(toolbarItemId = ''): string {
-        return `div.theia-notebook-main-toolbar-item${toolbarItemId ? `[id="${toolbarItemId}"]` : ''}`;
-    }
+  protected override toolBarItemSelector(toolbarItemId = ""): string {
+    return `div.theia-notebook-main-toolbar-item${toolbarItemId ? `[id="${toolbarItemId}"]` : ""}`;
+  }
 
-    protected override async toolbarElementHandle(): Promise<ElementHandle<SVGElement | HTMLElement> | null> {
-        // Use locator instead of page to find the toolbar element.
-        return this.locator.elementHandle();
-    }
+  protected override async toolbarElementHandle(): Promise<ElementHandle<
+    SVGElement | HTMLElement
+  > | null> {
+    // Use locator instead of page to find the toolbar element.
+    return this.locator.elementHandle();
+  }
 
-    override async waitForVisible(): Promise<void> {
-        // Use locator instead of page to find the toolbar element.
-        await this.locator.waitFor({ state: 'visible' });
-    }
+  override async waitForVisible(): Promise<void> {
+    // Use locator instead of page to find the toolbar element.
+    await this.locator.waitFor({ state: "visible" });
+  }
 
-    override async waitUntilHidden(): Promise<void> {
-        // Use locator instead of page to find the toolbar element.
-        await this.locator.waitFor({ state: 'hidden' });
-    }
+  override async waitUntilHidden(): Promise<void> {
+    // Use locator instead of page to find the toolbar element.
+    await this.locator.waitFor({ state: "hidden" });
+  }
 
-    override async waitUntilShown(): Promise<void> {
-        // Use locator instead of page to find the toolbar element.
-        await this.locator.waitFor({ state: 'visible' });
-    }
+  override async waitUntilShown(): Promise<void> {
+    // Use locator instead of page to find the toolbar element.
+    await this.locator.waitFor({ state: "visible" });
+  }
 }

@@ -14,45 +14,46 @@
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-only WITH Classpath-exception-2.0
 // *****************************************************************************
 
-import { ElementHandle, expect } from '@playwright/test';
+import { ElementHandle, expect } from "@playwright/test";
 
-import { TheiaMenu } from './theia-menu';
-import { TheiaPageObject } from './theia-page-object';
-import { normalizeId, toTextContentArray } from './util';
+import { TheiaMenu } from "./theia-menu";
+import { TheiaPageObject } from "./theia-page-object";
+import { normalizeId, toTextContentArray } from "./util";
 
 export class TheiaMainMenu extends TheiaMenu {
-    override selector = '.lm-Menu.lm-MenuBar-menu';
+  override selector = ".lm-Menu.lm-MenuBar-menu";
 }
 
 export class TheiaMenuBar extends TheiaPageObject {
-
-    async openMenu(menuName: string): Promise<TheiaMainMenu> {
-        const menuBarItem = await this.menuBarItem(menuName);
-        const mainMenu = new TheiaMainMenu(this.app);
-        if (await mainMenu.isOpen()) {
-            await menuBarItem?.hover();
-        } else {
-            await expect(async () => { //tobikli
-                await menuBarItem?.click();
-                await expect(this.page.locator(mainMenu.selector)).toBeVisible();
-              }).toPass();
-        }
-        
-        mainMenu.waitForVisible();
-        return mainMenu;
+  async openMenu(menuName: string): Promise<TheiaMainMenu> {
+    const menuBarItem = await this.menuBarItem(menuName);
+    const mainMenu = new TheiaMainMenu(this.app);
+    if (await mainMenu.isOpen()) {
+      await menuBarItem?.hover();
+    } else {
+      await expect(async () => {
+        //tobikli
+        await menuBarItem?.click();
+        await expect(this.page.locator(mainMenu.selector)).toBeVisible();
+      }).toPass();
     }
 
-    async visibleMenuBarItems(): Promise<string[]> {
-        const items = await this.page.$$(this.menuBarItemSelector());
-        return toTextContentArray(items);
-    }
+    mainMenu.waitForVisible();
+    return mainMenu;
+  }
 
-    protected menuBarItem(label = ''): Promise<ElementHandle<SVGElement | HTMLElement> | null> {
-        return this.page.waitForSelector(this.menuBarItemSelector(label));
-    }
+  async visibleMenuBarItems(): Promise<string[]> {
+    const items = await this.page.$$(this.menuBarItemSelector());
+    return toTextContentArray(items);
+  }
 
-    protected menuBarItemSelector(label = ''): string {
-        return `${normalizeId('#theia:menubar')} .lm-MenuBar-itemLabel >> text=${label}`;
-    }
+  protected menuBarItem(
+    label = "",
+  ): Promise<ElementHandle<SVGElement | HTMLElement> | null> {
+    return this.page.waitForSelector(this.menuBarItemSelector(label));
+  }
 
+  protected menuBarItemSelector(label = ""): string {
+    return `${normalizeId("#theia:menubar")} .lm-MenuBar-itemLabel >> text=${label}`;
+  }
 }

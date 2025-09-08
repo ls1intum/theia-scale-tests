@@ -1,7 +1,7 @@
 {
-    "github-actions.workflows.pinned.workflows": [
-        ".github/workflows/scalable-tests.yml",
-        ".github/workflows/functional-tests.yml",
-        ".github/workflows/artemis-integration-tests.yml"
-    ]
+  "github-actions.workflows.pinned.workflows": [
+    ".github/workflows/scalable-tests.yml",
+    ".github/workflows/functional-tests.yml",
+    ".github/workflows/artemis-integration-tests.yml"
+  ]
 }

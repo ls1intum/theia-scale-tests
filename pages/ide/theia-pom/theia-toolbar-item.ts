@@ -14,29 +14,32 @@
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-only WITH Classpath-exception-2.0
 // *****************************************************************************
 
-import { ElementHandle } from '@playwright/test';
-import { TheiaApp } from './theia-app';
-import { TheiaPageObject } from './theia-page-object';
+import { ElementHandle } from "@playwright/test";
+import { TheiaApp } from "./theia-app";
+import { TheiaPageObject } from "./theia-page-object";
 
 export class TheiaToolbarItem extends TheiaPageObject {
-    constructor(app: TheiaApp, protected element: ElementHandle<SVGElement | HTMLElement>) {
-        super(app);
-    }
+  constructor(
+    app: TheiaApp,
+    protected element: ElementHandle<SVGElement | HTMLElement>,
+  ) {
+    super(app);
+  }
 
-    async commandId(): Promise<string | null> {
-        return this.element.getAttribute('id');
-    }
+  async commandId(): Promise<string | null> {
+    return this.element.getAttribute("id");
+  }
 
-    async isEnabled(): Promise<boolean> {
-        const child = await this.element.$(':first-child');
-        const classAttribute = child && await child.getAttribute('class');
-        if (classAttribute === undefined || classAttribute === null) {
-            return false;
-        }
-        return classAttribute.includes('enabled');
+  async isEnabled(): Promise<boolean> {
+    const child = await this.element.$(":first-child");
+    const classAttribute = child && (await child.getAttribute("class"));
+    if (classAttribute === undefined || classAttribute === null) {
+      return false;
     }
+    return classAttribute.includes("enabled");
+  }
 
-    async trigger(): Promise<void> {
-        await this.element.click();
-    }
+  async trigger(): Promise<void> {
+    await this.element.click();
+  }
 }

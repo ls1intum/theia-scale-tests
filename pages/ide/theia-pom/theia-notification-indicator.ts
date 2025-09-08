@@ -14,31 +14,30 @@
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-only WITH Classpath-exception-2.0
 // *****************************************************************************
 
-import { TheiaStatusIndicator } from './theia-status-indicator';
+import { TheiaStatusIndicator } from "./theia-status-indicator";
 
-const NOTIFICATION_DOT_ICON = 'codicon-bell-dot';
+const NOTIFICATION_DOT_ICON = "codicon-bell-dot";
 
 export class TheiaNotificationIndicator extends TheiaStatusIndicator {
-    id = 'theia-notification-center';
+  id = "theia-notification-center";
 
-    async hasNotifications(): Promise<boolean> {
-        const container = await this.getElementHandle();
-        const bellWithDot = await container.$(`.${NOTIFICATION_DOT_ICON}`);
-        return Boolean(bellWithDot?.isVisible());
+  async hasNotifications(): Promise<boolean> {
+    const container = await this.getElementHandle();
+    const bellWithDot = await container.$(`.${NOTIFICATION_DOT_ICON}`);
+    return Boolean(bellWithDot?.isVisible());
+  }
+
+  override async waitForVisible(expectNotifications = false): Promise<void> {
+    await super.waitForVisible();
+    if (expectNotifications && !(await this.hasNotifications())) {
+      throw new Error("No notifications when notifications expected.");
     }
+  }
 
-    override async waitForVisible(expectNotifications = false): Promise<void> {
-        await super.waitForVisible();
-        if (expectNotifications && !(await this.hasNotifications())) {
-            throw new Error('No notifications when notifications expected.');
-        }
+  async toggleOverlay(): Promise<void> {
+    const element = await this.getElementHandle();
+    if (element) {
+      await element.click();
     }
-
-    async toggleOverlay(): Promise<void> {
-        const element = await this.getElementHandle();
-        if (element) {
-            await element.click();
-        }
-    }
-
+  }
 }

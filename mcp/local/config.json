@@ -1,11 +1,11 @@
 {
-    "browser": {
-        "launchOptions": {
-            "headless": false
-        },
-        "isolated": true
+  "browser": {
+    "launchOptions": {
+      "headless": false
     },
-    "server": {
-        "port": 8931
-    }
+    "isolated": true
+  },
+  "server": {
+    "port": 8931
+  }
 }

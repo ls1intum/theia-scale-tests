@@ -14,31 +14,33 @@
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-only WITH Classpath-exception-2.0
 // *****************************************************************************
 
-import { ElementHandle } from '@playwright/test';
+import { ElementHandle } from "@playwright/test";
 
-import { TheiaApp } from './theia-app';
-import { TheiaPageObject } from './theia-page-object';
-import { TheiaStatusIndicator } from './theia-status-indicator';
+import { TheiaApp } from "./theia-app";
+import { TheiaPageObject } from "./theia-page-object";
+import { TheiaStatusIndicator } from "./theia-status-indicator";
 
 export class TheiaStatusBar extends TheiaPageObject {
+  selector = "div#theia-statusBar";
 
-    selector = 'div#theia-statusBar';
+  protected async statusBarElementHandle(): Promise<ElementHandle<
+    SVGElement | HTMLElement
+  > | null> {
+    return this.page.$(this.selector);
+  }
 
-    protected async statusBarElementHandle(): Promise<ElementHandle<SVGElement | HTMLElement> | null> {
-        return this.page.$(this.selector);
-    }
+  async statusIndicator<
+    T extends TheiaStatusIndicator,
+  >(statusIndicatorFactory: { new (app: TheiaApp): T }): Promise<T> {
+    return new statusIndicatorFactory(this.app);
+  }
 
-    async statusIndicator<T extends TheiaStatusIndicator>(statusIndicatorFactory: { new(app: TheiaApp): T }): Promise<T> {
-        return new statusIndicatorFactory(this.app);
-    }
+  async waitForVisible(): Promise<void> {
+    await this.page.waitForSelector(this.selector, { state: "visible" });
+  }
 
-    async waitForVisible(): Promise<void> {
-        await this.page.waitForSelector(this.selector, { state: 'visible' });
-    }
-
-    async isVisible(): Promise<boolean> {
-        const statusBar = await this.statusBarElementHandle();
-        return !!statusBar && statusBar.isVisible();
-    }
-
+  async isVisible(): Promise<boolean> {
+    const statusBar = await this.statusBarElementHandle();
+    return !!statusBar && statusBar.isVisible();
+  }
 }

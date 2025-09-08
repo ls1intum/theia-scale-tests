@@ -14,8 +14,8 @@
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-only WITH Classpath-exception-2.0
 // *****************************************************************************
 
-import { TheiaStatusIndicator } from './theia-status-indicator';
+import { TheiaStatusIndicator } from "./theia-status-indicator";
 
 export class TheiaToggleBottomIndicator extends TheiaStatusIndicator {
-    id = 'bottom-panel-toggle';
+  id = "bottom-panel-toggle";
 }
