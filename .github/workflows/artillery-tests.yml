@@ -1,0 +1,27 @@
+name: Artillery Load Test
+ 
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+ 
+jobs:
+  artillery:
+    runs-on: ubuntu-latest
+    env:
+      KEYCLOAK_USER: ${{ secrets.KEYCLOAK_USER }}
+      KEYCLOAK_PWD: ${{ secrets.KEYCLOAK_PWD }}
+      LANDINGPAGE_URL: ${{ vars.LANDINGPAGE_URL }}
+ 
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Install dependencies
+        run: npm ci
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps
+      - name: Execute load tests
+        uses: artilleryio/action-cli@v1
+        with:
+          command: run tests/ide/scalable/artillery/Artillery.ts

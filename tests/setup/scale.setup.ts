@@ -13,7 +13,7 @@ import path from 'path';
 const instances = process.env.NUM_INSTANCES ? parseInt(process.env.NUM_INSTANCES) : 1;
 
 //TODO: Remove skip
-setup.skip('Start ' + instances + ' instances', async ({ }, testInfo) => {
+setup('Start ' + instances + ' instances', async ({ }, testInfo) => {
   setup.slow();
   const setupPromises = Array.from({ length: instances }, (_, i) => {
     return setupIDE("Java", testInfo, i);

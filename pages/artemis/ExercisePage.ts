@@ -27,10 +27,8 @@ export class ExercisePage {
 
     async openInOnlineIDE() {
         const codeButtonLocator = this.getCodeButton();
-        //maybe reload?
         await codeButtonLocator.click();
         const openOnlineIDEButton = this.getOpenOnlineIDEButton();
-        //maybe reload?
         await openOnlineIDEButton.click();
     }
 

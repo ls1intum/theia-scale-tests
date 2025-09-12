@@ -7,6 +7,9 @@ node_modules/
 /playwright/.cache/
 /tests-example/
 
+# Artillery
+/tests/ide/scalable/artillery/dist/
+
 # For Local Development
 /.auth/
 playwright.env

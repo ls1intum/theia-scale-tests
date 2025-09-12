@@ -11,11 +11,12 @@ jobs:
     env:
       KEYCLOAK_USER: ${{ secrets.KEYCLOAK_USER }}
       KEYCLOAK_PWD: ${{ secrets.KEYCLOAK_PWD }}
-      LANDINGPAGE_URL: https://theia.artemis.cit.tum.de
-      ARTEMIS_URL: https://artemis-test9.artemis.cit.tum.de
+      LANDINGPAGE_URL: ${{ vars.LANDINGPAGE_URL }}
+      ARTEMIS_URL: ${{ vars.ARTEMIS_URL }}
       ARTEMIS_USER: ${{ secrets.ARTEMIS_USER }}
       ARTEMIS_PWD: ${{ secrets.ARTEMIS_PWD }}
       NUM_INSTANCES: ${{ vars.NUM_INSTANCES }}
+      LOAD_TIMEOUT: ${{ vars.LOAD_TIMEOUT }}
 
     steps:
     - uses: actions/checkout@v4

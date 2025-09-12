@@ -3,6 +3,7 @@ import { TheiaTextEditor } from '../../../pages/ide/theia-pom/theia-text-editor'
 import { uniqueWords10, uniqueWords20 } from '../../../fixtures/utils/example-texts/lorem-ipsum';
 import { TheiaTerminal } from '../../../pages/ide/theia-pom/theia-terminal';
 import { TheiaSearchView } from '../../../pages/ide/custom-pom/theia-search';
+import { getRandomWord } from '../../../fixtures/utils/commands';
 
 /**
  * @description This test suite is used to test the search functionality of the IDE.
@@ -106,19 +107,3 @@ test.describe('IDE Search Tests', () => {
     
 
 });
-
-
-// Utility Functions
-
-/**
- * @description Get a random word from a text
- * @param text - The text to get a random word from
- * @returns A random word from the text
- */
-function getRandomWord(text: string): string | null {
-    const words = text.trim().split(/\s+/);
-    if (words.length === 0) return null;
-  
-    const randomIndex = Math.floor(Math.random() * words.length);
-    return words[randomIndex];
-  }
