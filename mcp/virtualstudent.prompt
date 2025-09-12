@@ -11,3 +11,4 @@ https://theia.artemis.cit.tum.de
 Also note the following:
 - You will only get this single prompt, so dont expect any more prompts till you finished everything that you want to do. Don't limit yourself to small things
 - Dont use any unnecessary wait statements
+- Never navigate to another page/link as it will kill the IDE Session, you just have to start it at the beginning and the interact with it

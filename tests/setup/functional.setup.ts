@@ -4,38 +4,40 @@ import { TestInfo } from "@playwright/test";
 import fs from "fs";
 import path from "path";
 
+/*eslint no-empty-pattern: ["error", { "allowObjectPatternsAsParameters": true }]*/
+
 /**
  * @remarks
  * This function is used to start the instance and get the IDE URL.
  * @tag slow (starting the instance takes a while)
  * @description This function automates the starting process for the LandingPage UI.
  */
-setup("Get IDE URL for C", async (_, testInfo) => {
+setup("Get IDE URL for C", async ({}, testInfo) => {
   setup.slow();
   await setupIDE("C", testInfo);
 });
 
-setup("Get IDE URL for Java", async (_, testInfo) => {
+setup("Get IDE URL for Java", async ({}, testInfo) => {
   setup.slow();
   await setupIDE("Java", testInfo);
 });
 
-setup("Get IDE URL for Python", async (_, testInfo) => {
+setup("Get IDE URL for Python", async ({}, testInfo) => {
   setup.slow();
   await setupIDE("Python", testInfo);
 });
 
-setup("Get IDE URL for Rust", async (_, testInfo) => {
+setup("Get IDE URL for Rust", async ({}, testInfo) => {
   setup.slow();
   await setupIDE("Rust", testInfo);
 });
 
-setup("Get IDE URL for OCaml", async (_, testInfo) => {
+setup("Get IDE URL for OCaml", async ({}, testInfo) => {
   setup.slow();
   await setupIDE("Ocaml", testInfo);
 });
 
-setup("Get IDE URL for JavaScript", async (_, testInfo) => {
+setup("Get IDE URL for JavaScript", async ({}, testInfo) => {
   setup.slow();
   await setupIDE("Javascript", testInfo);
 });
