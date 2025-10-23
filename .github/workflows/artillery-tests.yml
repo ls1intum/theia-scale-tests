@@ -1,11 +1,11 @@
 name: Artillery Load Test
- 
+
 on:
   push:
-    branches: [ main, master ]
+    branches: [main, master]
   pull_request:
-    branches: [ main, master ]
- 
+    branches: [main, master]
+
 jobs:
   artillery:
     runs-on: ubuntu-latest
@@ -13,7 +13,7 @@ jobs:
       KEYCLOAK_USER: ${{ secrets.KEYCLOAK_USER }}
       KEYCLOAK_PWD: ${{ secrets.KEYCLOAK_PWD }}
       LANDINGPAGE_URL: ${{ vars.LANDINGPAGE_URL }}
- 
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4

@@ -14,75 +14,91 @@
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-only WITH Classpath-exception-2.0
 // *****************************************************************************
 
-import { ElementHandle } from '@playwright/test';
-import { TheiaOutputView } from './theia-output-view';
-import { TheiaPageObject } from './theia-page-object';
-import { isElementVisible } from './util';
-import { TheiaMonacoEditor } from './theia-monaco-editor';
+import { ElementHandle } from "@playwright/test";
+import { TheiaOutputView } from "./theia-output-view";
+import { TheiaPageObject } from "./theia-page-object";
+import { isElementVisible } from "./util";
+import { TheiaMonacoEditor } from "./theia-monaco-editor";
 
 export interface TheiaOutputViewChannelData {
-    viewSelector: string;
-    dataUri: string;
-    channelName: string;
+  viewSelector: string;
+  dataUri: string;
+  channelName: string;
 }
 
 export class TheiaOutputViewChannel extends TheiaPageObject {
+  protected monacoEditor: TheiaMonacoEditor;
 
-    protected monacoEditor: TheiaMonacoEditor;
+  constructor(
+    protected readonly data: TheiaOutputViewChannelData,
+    protected readonly outputView: TheiaOutputView,
+  ) {
+    super(outputView.app);
+    this.monacoEditor = new TheiaMonacoEditor(
+      this.page.locator(this.viewSelector),
+      outputView.app,
+    );
+  }
 
-    constructor(protected readonly data: TheiaOutputViewChannelData, protected readonly outputView: TheiaOutputView) {
-        super(outputView.app);
-        this.monacoEditor = new TheiaMonacoEditor(this.page.locator(this.viewSelector), outputView.app);
+  protected get viewSelector(): string {
+    return this.data.viewSelector;
+  }
+
+  protected get dataUri(): string | undefined {
+    return this.data.dataUri;
+  }
+
+  protected get channelName(): string | undefined {
+    return this.data.channelName;
+  }
+
+  async waitForVisible(): Promise<void> {
+    await this.page.waitForSelector(this.viewSelector, { state: "visible" });
+  }
+
+  async isDisplayed(): Promise<boolean> {
+    return isElementVisible(this.viewElement());
+  }
+
+  protected viewElement(): Promise<ElementHandle<
+    SVGElement | HTMLElement
+  > | null> {
+    return this.page.$(this.viewSelector);
+  }
+
+  async numberOfLines(): Promise<number | undefined> {
+    await this.waitForVisible();
+    return this.monacoEditor.numberOfLines();
+  }
+
+  async maxSeverityOfLineByLineNumber(
+    lineNumber: number,
+  ): Promise<"error" | "warning" | "info"> {
+    await this.waitForVisible();
+    const lineElement = await (
+      await this.monacoEditor.line(lineNumber)
+    ).elementHandle();
+    const contents = await lineElement?.$$("span > span.mtk1");
+    if (!contents || contents.length < 1) {
+      throw new Error(`Could not find contents of line number ${lineNumber}!`);
     }
+    const severityClassNames = await Promise.all(
+      contents.map(
+        async (content) => (await content.getAttribute("class"))?.split(" ")[1],
+      ),
+    );
 
-    protected get viewSelector(): string {
-        return this.data.viewSelector;
+    if (severityClassNames.includes("theia-output-error")) {
+      return "error";
+    } else if (severityClassNames.includes("theia-output-warning")) {
+      return "warning";
     }
+    return "info";
+  }
 
-    protected get dataUri(): string | undefined {
-        return this.data.dataUri;
-    }
-
-    protected get channelName(): string | undefined {
-        return this.data.channelName;
-    }
-
-    async waitForVisible(): Promise<void> {
-        await this.page.waitForSelector(this.viewSelector, { state: 'visible' });
-    }
-
-    async isDisplayed(): Promise<boolean> {
-        return isElementVisible(this.viewElement());
-    }
-
-    protected viewElement(): Promise<ElementHandle<SVGElement | HTMLElement> | null> {
-        return this.page.$(this.viewSelector);
-    }
-
-    async numberOfLines(): Promise<number | undefined> {
-        await this.waitForVisible();
-        return this.monacoEditor.numberOfLines();
-    }
-
-    async maxSeverityOfLineByLineNumber(lineNumber: number): Promise<'error' | 'warning' | 'info'> {
-        await this.waitForVisible();
-        const lineElement = await (await this.monacoEditor.line(lineNumber)).elementHandle();
-        const contents = await lineElement?.$$('span > span.mtk1');
-        if (!contents || contents.length < 1) {
-            throw new Error(`Could not find contents of line number ${lineNumber}!`);
-        }
-        const severityClassNames = await Promise.all(contents.map(
-            async content => (await content.getAttribute('class'))?.split(' ')[1]));
-
-        if (severityClassNames.includes('theia-output-error')) {
-            return 'error';
-        } else if (severityClassNames.includes('theia-output-warning')) {
-            return 'warning';
-        }
-        return 'info';
-    }
-
-    async textContentOfLineByLineNumber(lineNumber: number): Promise<string | undefined> {
-        return this.monacoEditor.textContentOfLineByLineNumber(lineNumber);
-    }
+  async textContentOfLineByLineNumber(
+    lineNumber: number,
+  ): Promise<string | undefined> {
+    return this.monacoEditor.textContentOfLineByLineNumber(lineNumber);
+  }
 }

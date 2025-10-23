@@ -14,16 +14,14 @@
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-only WITH Classpath-exception-2.0
 // *****************************************************************************
 
-import { Page } from '@playwright/test';
+import { Page } from "@playwright/test";
 
-import { TheiaApp } from './theia-app';
+import { TheiaApp } from "./theia-app";
 
 export abstract class TheiaPageObject {
+  constructor(public app: TheiaApp) {}
 
-    constructor(public app: TheiaApp) { }
-
-    get page(): Page {
-        return this.app.page;
-    }
-
+  get page(): Page {
+    return this.app.page;
+  }
 }

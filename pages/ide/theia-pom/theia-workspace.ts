@@ -14,69 +14,69 @@
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-only WITH Classpath-exception-2.0
 // *****************************************************************************
 
-import * as fs from 'fs-extra';
-import { resolve } from 'path';
-import { OSUtil, urlEncodePath } from './util';
+import * as fs from "fs-extra";
+import { resolve } from "path";
+import { OSUtil, urlEncodePath } from "./util";
 
 export class TheiaWorkspace {
+  protected workspacePath: string;
 
-    protected workspacePath: string;
+  /**
+   * Creates a Theia workspace location with the specified path to files that shall be copied to this workspace.
+   * The `pathOfFilesToInitialize` must be relative to cwd of the node process.
+   *
+   * @param {string[]} pathOfFilesToInitialize Path to files or folders that shall be copied to the workspace
+   */
+  constructor(protected pathOfFilesToInitialize?: string[]) {
+    //this.workspacePath = fs.mkdtempSync(`${OSUtil.tmpDir}${OSUtil.fileSeparator}cloud-ws-`); //THEIA SCALE TEST - DO NOT CREATE A LOCAL DIRECTORY
+  }
 
-    /**
-     * Creates a Theia workspace location with the specified path to files that shall be copied to this workspace.
-     * The `pathOfFilesToInitialize` must be relative to cwd of the node process.
-     *
-     * @param {string[]} pathOfFilesToInitialize Path to files or folders that shall be copied to the workspace
-     */
-    constructor(protected pathOfFilesToInitialize?: string[]) {
-        //this.workspacePath = fs.mkdtempSync(`${OSUtil.tmpDir}${OSUtil.fileSeparator}cloud-ws-`); //THEIA SCALE TEST - DO NOT CREATE A LOCAL DIRECTORY
-    }
-
-    /** Performs the file system operations preparing the workspace location synchronously. */
-    initialize(): void {
-        if (this.pathOfFilesToInitialize) {
-            for (const initPath of this.pathOfFilesToInitialize) {
-                const absoluteInitPath = resolve(process.cwd(), initPath);
-                if (!fs.pathExistsSync(absoluteInitPath)) {
-                    throw Error('Workspace does not exist at ' + absoluteInitPath);
-                }
-                fs.copySync(absoluteInitPath, this.workspacePath);
-            }
+  /** Performs the file system operations preparing the workspace location synchronously. */
+  initialize(): void {
+    if (this.pathOfFilesToInitialize) {
+      for (const initPath of this.pathOfFilesToInitialize) {
+        const absoluteInitPath = resolve(process.cwd(), initPath);
+        if (!fs.pathExistsSync(absoluteInitPath)) {
+          throw Error("Workspace does not exist at " + absoluteInitPath);
         }
+        fs.copySync(absoluteInitPath, this.workspacePath);
+      }
     }
+  }
 
-    get path(): string {
-        let workspacePath = this.workspacePath;
+  get path(): string {
+    let workspacePath = this.workspacePath;
 
-        if (OSUtil.isWindows) {
-            // Drive letters in windows paths have to be lower case
-            workspacePath = workspacePath.replace(/.:/, matchedChar => matchedChar.toLowerCase());
-        } else {
-            if (!OSUtil.osStartsWithFileSeparator(this.workspacePath)) {
-                workspacePath = `${OSUtil.fileSeparator}${workspacePath}`;
-            }
-        }
-        return workspacePath;
+    if (OSUtil.isWindows) {
+      // Drive letters in windows paths have to be lower case
+      workspacePath = workspacePath.replace(/.:/, (matchedChar) =>
+        matchedChar.toLowerCase(),
+      );
+    } else {
+      if (!OSUtil.osStartsWithFileSeparator(this.workspacePath)) {
+        workspacePath = `${OSUtil.fileSeparator}${workspacePath}`;
+      }
     }
+    return workspacePath;
+  }
 
-    get urlEncodedPath(): string {
-        return urlEncodePath(this.path);
-    }
+  get urlEncodedPath(): string {
+    return urlEncodePath(this.path);
+  }
 
-    get escapedPath(): string {
-        return this.path.replace(/:/g, '%3A');
-    }
+  get escapedPath(): string {
+    return this.path.replace(/:/g, "%3A");
+  }
 
-    clear(): void {
-        fs.emptyDirSync(this.workspacePath);
-    }
+  clear(): void {
+    fs.emptyDirSync(this.workspacePath);
+  }
 
-    remove(): void {
-        fs.removeSync(this.workspacePath);
-    }
+  remove(): void {
+    fs.removeSync(this.workspacePath);
+  }
 
-    setPath(path: string): void {
-        this.workspacePath = path;
-    }
-
+  setPath(path: string): void {
+    this.workspacePath = path;
+  }
 }
