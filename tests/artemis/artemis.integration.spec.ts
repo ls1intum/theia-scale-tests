@@ -145,10 +145,35 @@ async function writeIntoFile(
   courseRepositoryName: string,
   artemisTheia: IDEPage,
 ) {
-  const editor = await artemisTheia.theiaApp.openEditor(
-    `${courseRepositoryName}/src/test/${fileName}`,
-    TheiaTextEditor,
-  );
+  let editor: TheiaTextEditor | undefined;
+  const maxRetries = 3;
+  const timeout = 10000; // 10 seconds
+
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      editor = await Promise.race([
+        artemisTheia.theiaApp.openEditor(
+          `${courseRepositoryName}/src/test/${fileName}`,
+          TheiaTextEditor,
+        ),
+        new Promise<never>((_, reject) =>
+          setTimeout(() => reject(new Error('Timeout opening editor')), timeout)
+        ),
+      ]);
+      break;
+    } catch (error) {
+      console.log(`Attempt ${attempt}/${maxRetries} to open editor failed:`, error);
+      if (attempt === maxRetries) {
+        throw new Error(`Failed to open editor after ${maxRetries} attempts: ${error}`);
+      }
+      await artemisTheia.page.waitForTimeout(1000); // Wait 1 second before retry
+    }
+  }
+
+  if (!editor) {
+    throw new Error('Editor is undefined after retries');
+  }
+
   await editor.activate();
   await editor.focus();
   await deleteAll(editor.page);

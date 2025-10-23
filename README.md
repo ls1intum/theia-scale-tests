@@ -40,6 +40,10 @@ This repository provides E2E integration tests for the [Theia Cloud IDE](https:/
 
 - To run the load tests, run:
 
+  > **_NOTE:_**
+  As load tests use a single account, pay attention that the session per user limit is min the amount of instances you want!
+
+
   ```bash
   npx playwright test --project=scale
   ```

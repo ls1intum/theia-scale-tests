@@ -21,6 +21,10 @@ const prompt = fs.readFileSync(
 const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY;
 if (!ANTHROPIC_API_KEY) throw new Error("ANTHROPIC_API_KEY is not set");
 
+/**
+ * Based on https://modelcontextprotocol.io/docs/develop/build-client#node
+ */
+
 class MCPClient {
   private mcp: Client;
   private anthropic: Anthropic;
@@ -57,63 +61,65 @@ class MCPClient {
     );
   }
 
-  async processPrompt(prompt: string) {
-    const messages: MessageParam[] = [{ role: "user", content: prompt }];
-    const finalText: string[] = [];
+  async processQuery(query: string) {
+    /**
+     * Process a query using Claude and available tools
+     *
+     * @param query - The user's input query
+     * @returns Processed response as a string
+     */
+    const messages: MessageParam[] = [
+      {
+        role: "user",
+        content: query,
+      },
+    ];
 
-    // initial LLM call
-    let response = await this.anthropic.messages.create({
+    // Initial Claude API call
+    const response = await this.anthropic.messages.create({
       model: "claude-opus-4-0",
       max_tokens: 1000,
       messages,
       tools: this.tools,
     });
 
-    let step = 1;
+    // Process response and handle tool calls
 
-    while (response.content.some((c) => c.type === "tool_use")) {
-      // Show LLM thought process
-      response.content.forEach((c) => {
-        if (c.type === "text") {
-          console.log(`Step ${step} - LLM thinks: ${c.text}`);
-        } else if (c.type === "tool_use") {
-          console.log(
-            `Step ${step} - LLM wants to use tool "${c.name}" with args:`,
-            c.input,
-          );
-        }
-      });
+    for (const content of response.content) {
+      if (content.type === "text") {
+        console.log("LLM thinking: " + content.text);
+      } else if (content.type === "tool_use") {
+        // Execute tool call
+        const toolName = content.name;
+        const toolArgs = content.input as { [x: string]: unknown } | undefined;
 
-      // Find the tool call
-      const toolContent = response.content.find((c) => c.type === "tool_use");
-      if (!toolContent) break;
+        const result = await this.mcp.callTool({
+          name: toolName,
+          arguments: toolArgs,
+        });
+        console.log(
+          `[Calling tool ${toolName} with args ${JSON.stringify(toolArgs)}]`,
+        );
 
-      const toolName = toolContent.name;
-      const toolArgs = toolContent.input as Record<string, unknown> | undefined;
+        // Continue conversation with tool results
+        messages.push({
+          role: "user",
+          content: result.content as string,
+        });
 
-      // Execute the tool
-      const toolResult = await this.mcp.callTool({
-        name: toolName,
-        arguments: toolArgs,
-      });
-      console.log(`Step ${step} - Tool "${toolName}" executed.`);
+        // Get next response from Claude
+        const response = await this.anthropic.messages.create({
+          model: "claude-opus-4-0",
+          max_tokens: 1000,
+          messages,
+        });
 
-      // Add tool result to conversation
-      messages.push({ role: "user", content: toolResult.content as string });
-      finalText.push(`[Step ${step}] ${toolResult.content as string}`);
-
-      // Get next LLM response
-      response = await this.anthropic.messages.create({
-        model: "claude-opus-4-0",
-        max_tokens: 1000,
-        messages,
-        tools: this.tools,
-      });
-
-      step++;
+        console.log(
+          response.content[0].type === "text" ? response.content[0].text : "",
+        );
+      }
     }
 
-    this.processPrompt("Continue with the task.");
   }
 
   async cleanup() {
@@ -126,7 +132,7 @@ class MCPClient {
   try {
     await ensureLogin();
     await client.connectToServer();
-    await client.processPrompt(prompt);
+    await client.processQuery(prompt);
     console.log("=== LLM Finished ===\n");
   } finally {
     await client.cleanup();
