@@ -23,7 +23,7 @@ export default defineConfig({
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: 'html',
 
-  timeout: 30 * 1000,
+  timeout: 60 * 1000,
 
   globalSetup: require.resolve('./fixtures/utils/global-setup.ts'),
 

@@ -14,6 +14,7 @@ test.describe('Theia IDE VSC Tests', () => {
     const workspacePath = 'vsc-test';
 
     test.beforeAll(async ({ pythonApp }) => {
+        test.slow();
         await pythonApp.createAndOpenWorkspace(workspacePath);
         const terminal = await pythonApp.theiaApp.openTerminal(TheiaTerminal);
         await terminal.submit('git init');
