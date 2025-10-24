@@ -14,81 +14,93 @@
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-only WITH Classpath-exception-2.0
 // *****************************************************************************
 
-import { TheiaApp } from './theia-app';
-import { TheiaNotificationIndicator } from './theia-notification-indicator';
-import { TheiaPageObject } from './theia-page-object';
+import { TheiaApp } from "./theia-app";
+import { TheiaNotificationIndicator } from "./theia-notification-indicator";
+import { TheiaPageObject } from "./theia-page-object";
 
 export class TheiaNotificationOverlay extends TheiaPageObject {
+  protected readonly HEADER_NOTIFICATIONS = "NOTIFICATIONS";
+  protected readonly HEADER_NO_NOTIFICATIONS = "NO NEW NOTIFICATIONS";
 
-    protected readonly HEADER_NOTIFICATIONS = 'NOTIFICATIONS';
-    protected readonly HEADER_NO_NOTIFICATIONS = 'NO NEW NOTIFICATIONS';
+  constructor(
+    app: TheiaApp,
+    protected notificationIndicator: TheiaNotificationIndicator,
+  ) {
+    super(app);
+  }
 
-    constructor(app: TheiaApp, protected notificationIndicator: TheiaNotificationIndicator) {
-        super(app);
+  protected get selector(): string {
+    return ".theia-notifications-overlay";
+  }
+
+  protected get containerSelector(): string {
+    return `${this.selector} .theia-notifications-container.theia-notification-center`;
+  }
+
+  protected get titleSelector(): string {
+    return `${this.containerSelector} .theia-notification-center-header-title`;
+  }
+
+  async isVisible(): Promise<boolean> {
+    const element = await this.page.$(`${this.containerSelector}.open`);
+    return element ? element.isVisible() : false;
+  }
+
+  async waitForVisible(): Promise<void> {
+    await this.page.waitForSelector(`${this.containerSelector}.open`);
+  }
+
+  async activate(): Promise<void> {
+    if (!(await this.isVisible())) {
+      await this.notificationIndicator.toggleOverlay();
     }
+    await this.waitForVisible();
+  }
 
-    protected get selector(): string {
-        return '.theia-notifications-overlay';
-    }
+  async toggle(): Promise<void> {
+    await this.app.quickCommandPalette.type("Toggle Notifications");
+    await this.app.quickCommandPalette.trigger(
+      "Notifications: Toggle Notifications",
+    );
+  }
 
-    protected get containerSelector(): string {
-        return `${this.selector} .theia-notifications-container.theia-notification-center`;
-    }
+  protected entrySelector(entryText: string): string {
+    return `${this.containerSelector} .theia-notification-message span:has-text("${entryText}")`;
+  }
 
-    protected get titleSelector(): string {
-        return `${this.containerSelector} .theia-notification-center-header-title`;
-    }
+  async waitForEntry(entryText: string): Promise<void> {
+    await this.activate();
+    await this.page.waitForSelector(this.entrySelector(entryText));
+  }
 
-    async isVisible(): Promise<boolean> {
-        const element = await this.page.$(`${this.containerSelector}.open`);
-        return element ? element.isVisible() : false;
-    }
+  async waitForEntryDetached(entryText: string): Promise<void> {
+    await this.activate();
+    await this.page.waitForSelector(this.entrySelector(entryText), {
+      state: "detached",
+    });
+  }
 
-    async waitForVisible(): Promise<void> {
-        await this.page.waitForSelector(`${this.containerSelector}.open`);
-    }
+  async isEntryVisible(entryText: string): Promise<boolean> {
+    await this.activate();
+    const element = await this.page.$(this.entrySelector(entryText));
+    return !!element && element.isVisible();
+  }
 
-    async activate(): Promise<void> {
-        if (!await this.isVisible()) {
-            await this.notificationIndicator.toggleOverlay();
-        }
-        await this.waitForVisible();
-    }
+  protected get clearAllButtonSelector(): string {
+    return (
+      this.selector +
+      " .theia-notification-center-header ul > li.codicon.codicon-clear-all"
+    );
+  }
 
-    async toggle(): Promise<void> {
-        await this.app.quickCommandPalette.type('Toggle Notifications');
-        await this.app.quickCommandPalette.trigger('Notifications: Toggle Notifications');
-    }
-
-    protected entrySelector(entryText: string): string {
-        return `${this.containerSelector} .theia-notification-message span:has-text("${entryText}")`;
-    }
-
-    async waitForEntry(entryText: string): Promise<void> {
-        await this.activate();
-        await this.page.waitForSelector(this.entrySelector(entryText));
-    }
-
-    async waitForEntryDetached(entryText: string): Promise<void> {
-        await this.activate();
-        await this.page.waitForSelector(this.entrySelector(entryText), { state: 'detached' });
-    }
-
-    async isEntryVisible(entryText: string): Promise<boolean> {
-        await this.activate();
-        const element = await this.page.$(this.entrySelector(entryText));
-        return !!element && element.isVisible();
-    }
-
-    protected get clearAllButtonSelector(): string {
-        return this.selector + ' .theia-notification-center-header ul > li.codicon.codicon-clear-all';
-    }
-
-    async clearAllNotifications(): Promise<void> {
-        await this.activate();
-        const element = await this.page.waitForSelector(this.clearAllButtonSelector);
-        await element.click();
-        await this.notificationIndicator.waitForVisible(false /* expectNotifications */);
-    }
-
+  async clearAllNotifications(): Promise<void> {
+    await this.activate();
+    const element = await this.page.waitForSelector(
+      this.clearAllButtonSelector,
+    );
+    await element.click();
+    await this.notificationIndicator.waitForVisible(
+      false /* expectNotifications */,
+    );
+  }
 }

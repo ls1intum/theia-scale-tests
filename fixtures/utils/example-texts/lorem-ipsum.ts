@@ -11,6 +11,6 @@ At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergr
 
 export const uniqueWords10 = `Technology advances rapidly transforming digital landscapes while innovative solutions emerge`;
 
-export const uniqueWords20 = `Artificial intelligence reshapes modern business operations through sophisticated algorithms. Cloud computing enables scalable infrastructure development across global networks. Cybersecurity experts`
+export const uniqueWords20 = `Artificial intelligence reshapes modern business operations through sophisticated algorithms. Cloud computing enables scalable infrastructure development across global networks. Cybersecurity experts`;
 
-export const uniqueWords30 = `Software engineers design efficient systems integrating diverse components. Mobile applications revolutionize user experiences creating seamless interactions. Quantum computing promises unprecedented computational power exploring new possibilities. Blockchain technology ensures transparent secure.`
+export const uniqueWords30 = `Software engineers design efficient systems integrating diverse components. Mobile applications revolutionize user experiences creating seamless interactions. Quantum computing promises unprecedented computational power exploring new possibilities. Blockchain technology ensures transparent secure.`;

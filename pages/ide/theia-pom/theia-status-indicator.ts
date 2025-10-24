@@ -14,37 +14,39 @@
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-only WITH Classpath-exception-2.0
 // *****************************************************************************
 
-import { ElementHandle } from '@playwright/test';
-import { TheiaPageObject } from './theia-page-object';
+import { ElementHandle } from "@playwright/test";
+import { TheiaPageObject } from "./theia-page-object";
 
 export abstract class TheiaStatusIndicator extends TheiaPageObject {
-    protected abstract id: string;
+  protected abstract id: string;
 
-    protected statusBarElementSelector = '#theia-statusBar div.element';
+  protected statusBarElementSelector = "#theia-statusBar div.element";
 
-    protected getSelectorForId(id: string): string {
-        return `${this.statusBarElementSelector}#status-bar-${id}`;
+  protected getSelectorForId(id: string): string {
+    return `${this.statusBarElementSelector}#status-bar-${id}`;
+  }
+
+  async waitForVisible(waitForDetached = false): Promise<void> {
+    await this.page.waitForSelector(
+      this.getSelectorForId(this.id),
+      waitForDetached ? { state: "detached" } : {},
+    );
+  }
+
+  async getElementHandle(): Promise<ElementHandle<SVGElement | HTMLElement>> {
+    const element = await this.page.$(this.getSelectorForId(this.id));
+    if (element) {
+      return element;
     }
+    throw new Error("Could not find status bar element with ID " + this.id);
+  }
 
-    async waitForVisible(waitForDetached = false): Promise<void> {
-        await this.page.waitForSelector(this.getSelectorForId(this.id), waitForDetached ? { state: 'detached' } : {});
+  async isVisible(): Promise<boolean> {
+    try {
+      const element = await this.getElementHandle();
+      return element.isVisible();
+    } catch (err) {
+      return false;
     }
-
-    async getElementHandle(): Promise<ElementHandle<SVGElement | HTMLElement>> {
-        const element = await this.page.$(this.getSelectorForId(this.id));
-        if (element) {
-            return element;
-        }
-        throw new Error('Could not find status bar element with ID ' + this.id);
-    }
-
-    async isVisible(): Promise<boolean> {
-        try {
-            const element = await this.getElementHandle();
-            return element.isVisible();
-        } catch (err) {
-            return false;
-        }
-    }
-
+  }
 }

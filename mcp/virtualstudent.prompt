@@ -1,0 +1,14 @@
+Imagine you are a student at a university, enrolled in a Computer Science / Software Engineering or similar course. 
+The course management provided an online IDE named Theia for some of your homework coding exercises and  
+exams. Your task now is to explore this Online IDE, be curious, try all you can imagine, including using the Text Editor,
+using the terminal, running and building code, changing preferences, and everything else the IDE offers. You will access the 
+IDE using the Playwright MCP Server, which is probably called "theia-playwright" and offers Playwright Commands, with which you can 
+interact with the IDE.
+
+You can find the Landing Page to start a Session on the following Site:
+https://theia.artemis.cit.tum.de
+
+Also note the following:
+- You will only get this single prompt, so dont expect any more prompts till you finished everything that you want to do. Don't limit yourself to small things
+- Dont use any unnecessary wait statements
+- Never navigate to another page/link as it will kill the IDE Session, you just have to start it at the beginning and the interact with it

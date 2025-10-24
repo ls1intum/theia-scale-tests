@@ -14,68 +14,87 @@
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-only WITH Classpath-exception-2.0
 // *****************************************************************************
 
-import { ElementHandle } from '@playwright/test';
+import { ElementHandle } from "@playwright/test";
 
-import { TheiaApp } from './theia-app';
-import { TheiaContextMenu } from './theia-context-menu';
-import { TheiaMenu } from './theia-menu';
+import { TheiaApp } from "./theia-app";
+import { TheiaContextMenu } from "./theia-context-menu";
+import { TheiaMenu } from "./theia-menu";
 
 export class TheiaTreeNode {
+  labelElementCssClass = ".theia-TreeNodeSegmentGrow";
+  nodeSegmentLabelCssClass = ".theia-tree-compressed-label-part";
+  expansionToggleCssClass = ".theia-ExpansionToggle";
+  collapsedCssClass = ".theia-mod-collapsed";
 
-    labelElementCssClass = '.theia-TreeNodeSegmentGrow';
-    nodeSegmentLabelCssClass = '.theia-tree-compressed-label-part';
-    expansionToggleCssClass = '.theia-ExpansionToggle';
-    collapsedCssClass = '.theia-mod-collapsed';
+  constructor(
+    protected elementHandle: ElementHandle<SVGElement | HTMLElement>,
+    protected app: TheiaApp,
+  ) {}
 
-    constructor(protected elementHandle: ElementHandle<SVGElement | HTMLElement>, protected app: TheiaApp) { }
-
-    async label(): Promise<string | null> {
-        const labelNode = await this.elementHandle.$(this.labelElementCssClass);
-        if (!labelNode) {
-            throw new Error('Cannot read label of ' + this.elementHandle);
-        }
-        return labelNode.textContent();
+  async label(): Promise<string | null> {
+    const labelNode = await this.elementHandle.$(this.labelElementCssClass);
+    if (!labelNode) {
+      throw new Error("Cannot read label of " + this.elementHandle);
     }
+    return labelNode.textContent();
+  }
 
-    async isCollapsed(): Promise<boolean> {
-        return !! await this.elementHandle.$(this.collapsedCssClass);
+  async isCollapsed(): Promise<boolean> {
+    return !!(await this.elementHandle.$(this.collapsedCssClass));
+  }
+
+  async isExpandable(): Promise<boolean> {
+    return !!(await this.elementHandle.$(this.expansionToggleCssClass));
+  }
+
+  async expand(): Promise<void> {
+    if (!(await this.isCollapsed())) {
+      return;
     }
+    const expansionToggle = await this.elementHandle.waitForSelector(
+      this.expansionToggleCssClass,
+    );
+    await expansionToggle.click();
+    await this.elementHandle.waitForSelector(
+      `${this.expansionToggleCssClass}:not(${this.collapsedCssClass})`,
+    );
+  }
 
-    async isExpandable(): Promise<boolean> {
-        return !! await this.elementHandle.$(this.expansionToggleCssClass);
+  async collapse(): Promise<void> {
+    if (await this.isCollapsed()) {
+      return;
     }
+    const expansionToggle = await this.elementHandle.waitForSelector(
+      this.expansionToggleCssClass,
+    );
+    await expansionToggle.click();
+    await this.elementHandle.waitForSelector(
+      `${this.expansionToggleCssClass}${this.collapsedCssClass}`,
+    );
+  }
 
-    async expand(): Promise<void> {
-        if (!await this.isCollapsed()) {
-            return;
-        }
-        const expansionToggle = await this.elementHandle.waitForSelector(this.expansionToggleCssClass);
-        await expansionToggle.click();
-        await this.elementHandle.waitForSelector(`${this.expansionToggleCssClass}:not(${this.collapsedCssClass})`);
+  async openContextMenu(): Promise<TheiaMenu> {
+    return TheiaContextMenu.open(this.app, () =>
+      this.elementHandle.waitForSelector(this.labelElementCssClass),
+    );
+  }
+
+  async openContextMenuOnSegment(nodeSegmentLabel: string): Promise<TheiaMenu> {
+    const treeNodeLabel = await this.elementHandle.waitForSelector(
+      this.labelElementCssClass,
+    );
+    const treeNodeLabelSegments = await treeNodeLabel.$$(
+      `span${this.nodeSegmentLabelCssClass}`,
+    );
+    for (const segmentLabel of treeNodeLabelSegments) {
+      if ((await segmentLabel.textContent()) === nodeSegmentLabel) {
+        return TheiaContextMenu.open(this.app, () =>
+          Promise.resolve(segmentLabel),
+        );
+      }
     }
-
-    async collapse(): Promise<void> {
-        if (await this.isCollapsed()) {
-            return;
-        }
-        const expansionToggle = await this.elementHandle.waitForSelector(this.expansionToggleCssClass);
-        await expansionToggle.click();
-        await this.elementHandle.waitForSelector(`${this.expansionToggleCssClass}${this.collapsedCssClass}`);
-    }
-
-    async openContextMenu(): Promise<TheiaMenu> {
-        return TheiaContextMenu.open(this.app, () => this.elementHandle.waitForSelector(this.labelElementCssClass));
-    }
-
-    async openContextMenuOnSegment(nodeSegmentLabel: string): Promise<TheiaMenu> {
-        const treeNodeLabel = await this.elementHandle.waitForSelector(this.labelElementCssClass);
-        const treeNodeLabelSegments = await treeNodeLabel.$$(`span${this.nodeSegmentLabelCssClass}`);
-        for (const segmentLabel of treeNodeLabelSegments) {
-            if (await segmentLabel.textContent() === nodeSegmentLabel) {
-                return TheiaContextMenu.open(this.app, () => Promise.resolve(segmentLabel));
-            }
-        }
-        throw new Error('Could not find tree node segment label "' + nodeSegmentLabel + '"');
-    }
-
+    throw new Error(
+      'Could not find tree node segment label "' + nodeSegmentLabel + '"',
+    );
+  }
 }

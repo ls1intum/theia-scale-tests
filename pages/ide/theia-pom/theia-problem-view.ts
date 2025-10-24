@@ -14,17 +14,17 @@
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-only WITH Classpath-exception-2.0
 // *****************************************************************************
 
-import { TheiaApp } from './theia-app';
-import { TheiaView } from './theia-view';
+import { TheiaApp } from "./theia-app";
+import { TheiaView } from "./theia-view";
 
 const TheiaProblemsViewData = {
-    tabSelector: '#shell-tab-problems',
-    viewSelector: '#problems',
-    viewName: 'Problems'
+  tabSelector: "#shell-tab-problems",
+  viewSelector: "#problems",
+  viewName: "Problems",
 };
 
 export class TheiaProblemsView extends TheiaView {
-    constructor(app: TheiaApp) {
-        super(TheiaProblemsViewData, app);
-    }
+  constructor(app: TheiaApp) {
+    super(TheiaProblemsViewData, app);
+  }
 }

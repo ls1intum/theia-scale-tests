@@ -7,7 +7,11 @@ node_modules/
 /playwright/.cache/
 /tests-example/
 
+# Artillery
+/tests/ide/scalable/artillery/dist/
+
 # For Local Development
+/mcp/automated/mcp.env
 /.auth/
 playwright.env
 /test-data/

@@ -1,9 +1,10 @@
-import { test as setup, chromium } from '@playwright/test';
-import { LandingPage } from '../../pages/landing/LandingPage';
-import { TestInfo } from '@playwright/test';
-import fs from 'fs';
-import path from 'path';
-import { error } from 'console';
+import { test as setup, chromium } from "@playwright/test";
+import { LandingPage } from "../../pages/landing/LandingPage";
+import { TestInfo } from "@playwright/test";
+import fs from "fs";
+import path from "path";
+
+/*eslint no-empty-pattern: ["error", { "allowObjectPatternsAsParameters": true }]*/
 
 /**
  * @remarks
@@ -11,44 +12,43 @@ import { error } from 'console';
  * @tag slow (starting the instance takes a while)
  * @description This function automates the starting process for the LandingPage UI.
  */
-setup('Get IDE URL for C', async ({ }, testInfo) => {
+setup("Get IDE URL for C", async ({}, testInfo) => {
   setup.slow();
-  await setupIDE('C', testInfo);
-}); 
+  await setupIDE("C", testInfo);
+});
 
-setup('Get IDE URL for Java', async ({ }, testInfo) => {
+setup("Get IDE URL for Java", async ({}, testInfo) => {
   setup.slow();
-  await setupIDE('Java', testInfo);
-}); 
+  await setupIDE("Java", testInfo);
+});
 
-setup('Get IDE URL for Python', async ({ }, testInfo) => {
+setup("Get IDE URL for Python", async ({}, testInfo) => {
   setup.slow();
-  await setupIDE('Python', testInfo);
-}); 
+  await setupIDE("Python", testInfo);
+});
 
-setup('Get IDE URL for Rust', async ({ }, testInfo) => {
+setup("Get IDE URL for Rust", async ({}, testInfo) => {
   setup.slow();
-  await setupIDE('Rust', testInfo);
-}); 
+  await setupIDE("Rust", testInfo);
+});
 
-setup('Get IDE URL for OCaml', async ({ }, testInfo) => {
+setup("Get IDE URL for OCaml", async ({}, testInfo) => {
   setup.slow();
-  await setupIDE('Ocaml', testInfo);
-}); 
+  await setupIDE("Ocaml", testInfo);
+});
 
-setup('Get IDE URL for JavaScript', async ({ }, testInfo) => {
+setup("Get IDE URL for JavaScript", async ({}, testInfo) => {
   setup.slow();
-  await setupIDE('Javascript', testInfo);
-}); 
-
+  await setupIDE("Javascript", testInfo);
+});
 
 async function setupIDE(language: string, testInfo: TestInfo) {
   const browser = await chromium.launch();
   let context;
 
-  if (testInfo.project.name !== 'local') {
-    context = await browser.newContext({ 
-      storageState: '.auth/keycloak_user.json'
+  if (testInfo.project.name !== "local") {
+    context = await browser.newContext({
+      storageState: ".auth/keycloak_user.json",
     });
   } else {
     context = await browser.newContext();
@@ -56,9 +56,9 @@ async function setupIDE(language: string, testInfo: TestInfo) {
 
   const page = await context.newPage();
 
-  if (testInfo.project.name !== 'local') {
+  if (testInfo.project.name !== "local") {
     const landingPage = new LandingPage(page);
-    await page.goto('/');
+    await page.goto("/");
     await landingPage.launchLanguage(language);
     await page.waitForURL(/.*#\/home\/project/);
   } else {
@@ -66,16 +66,18 @@ async function setupIDE(language: string, testInfo: TestInfo) {
     await page.waitForURL(/.*#\/home\/project/);
   }
 
-  await page.waitForLoadState('domcontentloaded');
-  
+  await page.waitForLoadState("domcontentloaded");
+
   const ideURL = page.url();
-  const testDataDir = path.join(process.cwd(), 'test-data/functional');
+  const testDataDir = path.join(process.cwd(), "test-data/functional");
   if (!fs.existsSync(testDataDir)) {
     fs.mkdirSync(testDataDir, { recursive: true });
   }
-  fs.writeFileSync(path.join(testDataDir, 'ide-url-' + language.toLowerCase() + '.txt'), ideURL);
+  fs.writeFileSync(
+    path.join(testDataDir, "ide-url-" + language.toLowerCase() + ".txt"),
+    ideURL,
+  );
 
   await context.close();
   await browser.close();
 }
-

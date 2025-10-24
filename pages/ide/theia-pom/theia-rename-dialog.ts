@@ -14,22 +14,24 @@
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-only WITH Classpath-exception-2.0
 // *****************************************************************************
 
-import { TheiaDialog } from './theia-dialog';
-import { USER_KEY_TYPING_DELAY } from './util';
+import { TheiaDialog } from "./theia-dialog";
+import { USER_KEY_TYPING_DELAY } from "./util";
 
 export class TheiaRenameDialog extends TheiaDialog {
+  async enterNewName(newName: string): Promise<void> {
+    const inputField = this.page.locator(`${this.blockSelector} .theia-input`);
+    await inputField.selectText();
+    await inputField.pressSequentially(newName, {
+      delay: USER_KEY_TYPING_DELAY,
+    });
+  }
 
-    async enterNewName(newName: string): Promise<void> {
-        const inputField = this.page.locator(`${this.blockSelector} .theia-input`);
-        await inputField.selectText();
-        await inputField.pressSequentially(newName, { delay: USER_KEY_TYPING_DELAY });
+  async confirm(): Promise<void> {
+    if (!(await this.validationResult())) {
+      throw new Error(
+        `Unexpected validation error in TheiaRenameDialog: '${await this.getValidationText()}`,
+      );
     }
-
-    async confirm(): Promise<void> {
-        if (!await this.validationResult()) {
-            throw new Error(`Unexpected validation error in TheiaRenameDialog: '${await this.getValidationText()}`);
-        }
-        await this.clickMainButton();
-    }
-
+    await this.clickMainButton();
+  }
 }

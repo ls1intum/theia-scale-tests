@@ -1,8 +1,8 @@
-import { test as setup } from '@playwright/test';
-import { LandingPage } from '../../pages/landing/LandingPage';
-import path from 'path';
+import { test as setup } from "@playwright/test";
+import { LandingPage } from "../../pages/landing/LandingPage";
+import path from "path";
 
-const authFile = path.join(__dirname, '../../.auth/artemis_user.json');
+const authFile = path.join(__dirname, "../../.auth/artemis_user.json");
 
 /**
  * @remarks
@@ -10,15 +10,17 @@ const authFile = path.join(__dirname, '../../.auth/artemis_user.json');
  * @tag slow (starting the instance takes a while)
  * @description This function automates the login process for the Keycloak UI.
  */
-setup('Auth: Authenticate Keycloak with Artemis user', async ({ page }) => {
+setup("Auth: Authenticate Keycloak with Artemis user", async ({ page }) => {
   setup.slow();
   await page.goto(`/`);
-  
+
   const landingPage = new LandingPage(page);
-  await landingPage.login(process.env.ARTEMIS_USER || '', process.env.ARTEMIS_PWD || '');
+  await landingPage.login(
+    process.env.ARTEMIS_USER || "",
+    process.env.ARTEMIS_PWD || "",
+  );
 
   await page.waitForURL(`/`);
 
   await page.context().storageState({ path: authFile });
 });
-

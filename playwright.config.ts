@@ -1,5 +1,5 @@
-import { defineConfig, devices } from '@playwright/test';
-import dotenv from 'dotenv';
+import { defineConfig, devices } from "@playwright/test";
+import dotenv from "dotenv";
 
 /**
  * Read environment variables from file.
@@ -11,7 +11,7 @@ dotenv.config({ path: `./playwright.env` });
  * See https://playwright.dev/docs/test-configuration.
  */
 export default defineConfig({
-  testDir: './tests',
+  testDir: "./tests",
   /* Run tests in files in parallel */
   fullyParallel: true,
   /* Fail the build on CI if you accidentally left test.only in the source code. */
@@ -19,23 +19,27 @@ export default defineConfig({
   /* Retry on CI only */
   retries: process.env.CI ? 2 : 1,
   /* Opt out of parallel tests on CI. */
-  workers: process.env.CI ? process.env.NUM_INSTANCES ? parseInt(process.env.NUM_INSTANCES) : 1 : undefined,
+  workers: process.env.CI
+    ? process.env.NUM_INSTANCES
+      ? parseInt(process.env.NUM_INSTANCES)
+      : 1
+    : undefined,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
-  reporter: 'html',
+  reporter: "html",
 
   timeout: 60 * 1000,
 
-  globalSetup: require.resolve('./fixtures/utils/global-setup.ts'),
+  globalSetup: require.resolve("./fixtures/utils/global-setup.ts"),
 
-  globalTeardown: require.resolve('./fixtures/utils/global-teardown.ts'),
+  globalTeardown: require.resolve("./fixtures/utils/global-teardown.ts"),
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Base URL to use in actions like `await page.goto('/')`. */
     // baseURL: 'http://127.0.0.1:3000',
-    baseURL: process.env.LANDINGPAGE_URL || 'https://theia.artemis.cit.tum.de',
+    baseURL: process.env.LANDINGPAGE_URL || "https://theia.artemis.cit.tum.de",
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
-    trace: 'on-first-retry',
+    trace: "on-first-retry",
 
     ignoreHTTPSErrors: true,
   },
@@ -43,96 +47,102 @@ export default defineConfig({
   /* Configure projects for major browsers */
   projects: [
     // Setup project for auth
-    { 
-      name: 'auth-keycloak-setup',
-      testMatch: '**/auth_keycloak_user.setup.ts',
+    {
+      name: "auth-keycloak-setup",
+      testMatch: "**/auth_keycloak_user.setup.ts",
       use: {
         storageState: undefined,
-      }
+      },
     },
     // Setup project for auth with Artemis user
-    { 
-      name: 'auth-artemis-setup',
-      testMatch: '**/auth_artemis_user.setup.ts',
+    {
+      name: "auth-artemis-setup",
+      testMatch: "**/auth_artemis_user.setup.ts",
       use: {
         storageState: undefined,
-      }
+      },
     },
 
     // Setup project for IDE URL
     {
-      name: 'functional-setup',
-      testMatch: '**/functional.setup.ts',
+      name: "functional-setup",
+      testMatch: "**/functional.setup.ts",
       use: {
-        storageState: '.auth/keycloak_user.json',
+        storageState: ".auth/keycloak_user.json",
       },
-      dependencies: ['auth-keycloak-setup']
+      dependencies: ["auth-keycloak-setup"],
     },
 
     // Setup project for Scale tests
     {
-      name: 'scale-setup',
-      testMatch: '**/scale.setup.ts',
+      name: "scale-setup",
+      testMatch: "**/scale.setup.ts",
       use: {
-        storageState: '.auth/keycloak_user.json',
+        storageState: ".auth/keycloak_user.json",
       },
-      dependencies: ['auth-keycloak-setup']
+      dependencies: ["auth-keycloak-setup"],
     },
 
     // Main test projects
     {
-      name: 'functional',
+      name: "functional",
       testMatch: /.*\.(functional|ide)\.spec\.ts/,
       use: {
-        ...devices['Desktop Chrome'],
-        storageState: '.auth/keycloak_user.json',
+        ...devices["Desktop Chrome"],
+        storageState: ".auth/keycloak_user.json",
         launchOptions: {
           slowMo: 500, //TODO: 500ms delay between actions as temp solution for slow UI
         },
       },
-      dependencies: ['functional-setup']
+      dependencies: ["functional-setup"],
     },
 
     // Scale testing on deployed version
     {
-      name: 'scale',
+      name: "scale",
       testMatch: /.*\.scale\.spec\.ts/,
-      workers: process.env.NUM_INSTANCES ? parseInt(process.env.NUM_INSTANCES) : 1,
+      workers: process.env.NUM_INSTANCES
+        ? parseInt(process.env.NUM_INSTANCES)
+        : 1,
+      timeout: process.env.LOAD_TIMEOUT
+        ? parseInt(process.env.LOAD_TIMEOUT) * 1000
+        : 60 * 1000,
       use: {
-        ...devices['Desktop Chrome'],
-        storageState: '.auth/keycloak_user.json',
+        ...devices["Desktop Chrome"],
+        storageState: ".auth/keycloak_user.json",
         launchOptions: {
           slowMo: 500, //TODO: 500ms delay between actions as temp solution for slow UI
         },
       },
-      dependencies: ['scale-setup']
+      dependencies: ["scale-setup"],
     },
 
     {
-      name: 'artemis',
+      name: "artemis",
       testMatch: /.*\.integration\.spec\.ts/,
       fullyParallel: true,
-      workers: process.env.NUM_INSTANCES ? parseInt(process.env.NUM_INSTANCES) : 1,
+      workers: process.env.NUM_INSTANCES
+        ? parseInt(process.env.NUM_INSTANCES)
+        : 1,
       use: {
-        ...devices['Desktop Chrome'],
+        ...devices["Desktop Chrome"],
         bypassCSP: true,
-        storageState: '.auth/artemis_user.json',
+        storageState: ".auth/artemis_user.json",
         launchOptions: {
           slowMo: 100, //TODO: 100ms delay between actions as temp solution for slow UI
-          headless: true,
           args: [
-            '--disable-web-security',
-            '--disable-site-isolation-trials',
-            '--disable-features=IsolateOrigins,site-per-process',
-          ]
+            "--disable-web-security",
+            "--disable-site-isolation-trials",
+            "--disable-features=IsolateOrigins,site-per-process",
+          ],
         },
       },
-      dependencies: ['auth-artemis-setup']
+      dependencies: ["auth-artemis-setup"],
     },
 
     // Local testing for functional tests
     {
-      name: 'local',
+      name: "local",
       testMatch: /.*\.(functional|ide)\.spec\.ts/,
       use: {
         baseURL: process.env.LOCAL_URL,
