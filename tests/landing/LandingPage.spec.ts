@@ -58,7 +58,7 @@ test.describe("LandingPage: Landing Page Setup", () => {
   //TODO: Enable this test once sure of mulitple instance creation does not break the system
   test.skip("LandingPage: Launch C instance", async ({ landingPage }) => {
     test.slow();
-    await landingPage.launchLanguage("C");
+    await landingPage.launchLanguage("c");
     await landingPage.page.waitForURL(/.*#\/home\/project/);
   });
 });

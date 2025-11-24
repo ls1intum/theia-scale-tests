@@ -49,7 +49,7 @@ async function runVirtualStudent(
       process.env.KEYCLOAK_USER!,
       process.env.KEYCLOAK_PWD!,
     );
-    await landingPage.launchLanguage("Java");
+    await landingPage.launchLanguage("java-17");
     await page.waitForURL(/.*#\/home\/project/);
   });
 

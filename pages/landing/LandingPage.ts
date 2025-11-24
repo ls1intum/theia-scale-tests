@@ -39,7 +39,7 @@ export class LandingPage {
   }
 
   async clickLoginButton() {
-    return this.page.getByRole("button", { name: "Login" }).click();
+    return this.page.getByTestId("loginButton").click();
   }
 
   async login(username: string, password: string) {
@@ -50,13 +50,12 @@ export class LandingPage {
   }
 
   async logout() {
-    await this.page.getByRole("link", { name: "logout" }).click();
+    await this.page.getByTestId("logoutButton").click();
   }
 
   async launchLanguage(language: string) {
     const languageButton = await this.page
-      .getByRole("button", { name: `Launch ${language}` })
-      .first();
+      .getByTestId(`launch-app-${language}-latest`);
     await languageButton.click();
   }
 

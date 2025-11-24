@@ -14,32 +14,32 @@ import path from "path";
  */
 setup("Get IDE URL for C", async ({}, testInfo) => {
   setup.slow();
-  await setupIDE("C", testInfo);
+  await setupIDE("c", testInfo);
 });
 
 setup("Get IDE URL for Java", async ({}, testInfo) => {
   setup.slow();
-  await setupIDE("Java", testInfo);
+  await setupIDE("java-17", testInfo);
 });
 
 setup("Get IDE URL for Python", async ({}, testInfo) => {
   setup.slow();
-  await setupIDE("Python", testInfo);
+  await setupIDE("python", testInfo);
 });
 
 setup("Get IDE URL for Rust", async ({}, testInfo) => {
   setup.slow();
-  await setupIDE("Rust", testInfo);
+  await setupIDE("rust", testInfo);
 });
 
 setup("Get IDE URL for OCaml", async ({}, testInfo) => {
   setup.slow();
-  await setupIDE("Ocaml", testInfo);
+  await setupIDE("ocaml", testInfo);
 });
 
 setup("Get IDE URL for JavaScript", async ({}, testInfo) => {
   setup.slow();
-  await setupIDE("Javascript", testInfo);
+  await setupIDE("javascript", testInfo);
 });
 
 async function setupIDE(language: string, testInfo: TestInfo) {
