@@ -12,7 +12,7 @@ This repository provides E2E integration tests for the [Theia Cloud IDE](https:/
 ## Information
 
 - Tests are written using [Playwright](https://playwright.dev)
-- Scaled tests (potentially) run via the Playwright [Artillery](https://artillery.io) Framework
+- Scaled tests run via the Playwright [Artillery](https://artillery.io) Framework or natively only using Playwright
 
 ## Setup
 
@@ -81,7 +81,7 @@ This repository provides E2E integration tests for the [Theia Cloud IDE](https:/
 ## Development
 
 - Single User Playwright Tests are run using a Test Account for Keycloak, to change the Test User, change the environment variables in GitHub Secrets \
-  -> Settings -> Secrets and variables -> Actions -> Secrets -> Repository Secrets \
+  -> Settings -> Secrets and variables -> Actions -> Secrets -> Repository Secrets
 
 - All functional tests (that can also be run on a local instance) have the following file format:
   ```none
@@ -94,7 +94,7 @@ This repository provides E2E integration tests for the [Theia Cloud IDE](https:/
 - Tests require to have a specific setup files run before them. These are normally already run by requirements of the **playwright.config.ts**
 - The tests safe the URL for each instance in a text file under **/test-data** for debugging and to access them in the tests
 - Tests are intended to run on the production environment (https://theia.artemis.cit.tum.de)
-  - As tests include testing of all available programming languages: local images for each language can be found here: https://github.com/orgs/ls1intum/packages?tab=packages&q=theia
+  - As tests include testing of all available programming languages: local images for each language can be found here: https://github.com/orgs/ls1intum/packages?repo_name=artemis-theia-blueprints
 
 ## Info
 

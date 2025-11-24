@@ -51,7 +51,7 @@ export const test = base.extend<TheiaFixtures>({
     const urlPath = path.join(
       process.cwd(),
       "test-data/functional",
-      "ide-url-java.txt",
+      "-17.txt",
     );
     const ideURL = fs.readFileSync(urlPath, "utf8");
     const page = await browser.newPage();

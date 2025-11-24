@@ -24,7 +24,7 @@ async function globalSetup(config: { projects: { name: string }[] }) {
       process.env.LOCAL_URL_C || "",
     );
     fs.writeFileSync(
-      path.join(testDataDir, "ide-url-java.txt"),
+      path.join(testDataDir, "ide-url-java-17.txt"),
       process.env.LOCAL_URL_JAVA || "",
     );
     fs.writeFileSync(
