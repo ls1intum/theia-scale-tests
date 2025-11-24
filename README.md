@@ -16,6 +16,13 @@ This repository provides E2E integration tests for the [Theia Cloud IDE](https:/
 
 ## Setup
 
+- Setup Envionment Variables
+  - Duplicate `playwright.env.template` and rename it to `playwright.env` (make sure this file is gitignored!)
+  - Fill in the given variables as described in the file, notice:
+    - Keycloak User and Password needs to have access to Theia (does not need to be the same Artemis User as of now)
+    - Landing Page URL is the URL of the Theia Deployment to test against (this does not affect the Artemis Integration test, as the target deployment is set by Artemis)
+    - The Artemis User needs to have enough priviliges to create a course and exercise on the given test server
+
 - Get the latest Theia IDE image from [here](https://ghcr.io/eclipse-theia/theia-ide/theia-ide:latest) and run it. Put the corresponding URL into the env file
 
 - Install dependencies and playwright browser
