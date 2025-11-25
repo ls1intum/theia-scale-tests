@@ -19,20 +19,23 @@ export class TheiaVSCView extends TheiaView {
     await viewElement?.waitForSelector(".theia-scm-main-container");
   }
 
-  async commit(message: string): Promise<void> {
-    await this.page
-      .locator(".theia-scm-main-container")
-      .locator(".theia-scm-input-message")
-      .fill(message);
-    const commitButton = await this.page
-      .locator(".theia-sidepanel-toolbar")
-      .locator(".codicon-check");
-    await commitButton.click();
+async commit(message: string): Promise<void> {
+  await this.page
+    .locator(".theia-scm-main-container .theia-scm-input-message")
+    .fill(message);
+  const commitButton = this.page
+    .locator(".theia-sidepanel-toolbar .codicon-check");
+  await commitButton.click();
+  try {
     const commitDialog = await this.page.waitForSelector(
       'div[class="dialogBlock"]',
+      { timeout: 5000 }
     );
     await commitDialog.press("Enter");
+  } catch (e) {
+    console.log("Nothing to commit skipping.");
   }
+}
 
   async commitAllandPush(message: string): Promise<void> {
     await this.page

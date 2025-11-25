@@ -11,7 +11,6 @@ import {
   editPolicy,
   editSortStrategy,
   openAboutPage,
-  reloadPage,
   useTerminal,
 } from "./Scenarios";
 
@@ -42,8 +41,6 @@ export async function determinsticRun(theiaApp: TheiaApp) {
   await buildProject(terminal);
   await sleep(1000);
   await editPolicy(theiaApp);
-  await sleep(1000);
-  await reloadPage(theiaApp);
   await sleep(1000);
   await buildProject(terminal);
   await sleep(1000);

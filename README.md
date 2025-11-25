@@ -13,6 +13,7 @@ This repository provides E2E integration tests for the [Theia Cloud IDE](https:/
 
 - Tests are written using [Playwright](https://playwright.dev)
 - Scaled tests run via the Playwright [Artillery](https://artillery.io) Framework or natively only using Playwright
+- Make sure, that Sessions per User and max instanecs per App Definition is high enough set on the cluster!
 
 ## Setup
 

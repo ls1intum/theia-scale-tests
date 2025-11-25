@@ -14,7 +14,7 @@ jobs:
       ARTEMIS_PWD: ${{ secrets.ARTEMIS_PWD }}
       NUM_INSTANCES: ${{ vars.NUM_INSTANCES }}
       LOAD_TIMEOUT: ${{ vars.LOAD_TIMEOUT }}
-
+      DETERMINISTIC: 1
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4

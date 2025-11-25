@@ -20,6 +20,9 @@ export const config = {
         slowMo: 500,
         headless: false,
       },
+      contextOptions: {
+        permissions: ["clipboard-write", "clipboard-read"],
+      },
       defaultNavigationTimeout: 300000,
     },
   },

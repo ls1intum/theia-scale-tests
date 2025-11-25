@@ -10,6 +10,9 @@ const testConditions = Array.from({ length: numUsers }, (_, i) => ({ id: i }));
 
 //IF we need to use differnet users, login here with each user
 test.describe.parallel("Scalable Virtual Student Tests", () => {
+  test.use({
+    permissions: ["clipboard-write", "clipboard-read"],
+  });
   for (const condition of testConditions) {
     test(`Virtual student #${condition.id + 1}`, async ({ page }) => {
       const urlPath = path.join(

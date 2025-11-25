@@ -25,7 +25,6 @@ import {
   editPolicy,
   editSortStrategy,
   openAboutPage,
-  reloadPage,
   runTests,
   searchForWords,
   useTerminal,
@@ -68,6 +67,7 @@ export async function virtualStudent(page: Page, test) {
   await step("Cloning the repository", async () => {
     terminal = await theiaApp.openTerminal(TheiaTerminal);
     await terminal.submit("git clone " + loadRepositoryURL);
+    await sleep(5000);
     await terminal.close();
   });
 
@@ -88,6 +88,12 @@ export async function virtualStudent(page: Page, test) {
     await preferences.setBooleanPreferenceById(preferenceId, false);
     await preferences.waitForModified(preferenceId);
   });
+
+  /*await step("Creating necessary files", async () => {
+    await createNewFile(theiaApp, "Context.java");
+    await createNewFile(theiaApp, "Policy.java");
+    await createNewFile(theiaApp, "SortStrategy.java");
+  });*/
 
   await step("Running the scenarios", async () => {
     const explorer = await theiaApp.openView(TheiaExplorerView);
@@ -118,7 +124,6 @@ export async function virtualStudent(page: Page, test) {
       searchForWords,
       changePreferences,
       openAboutPage,
-      reloadPage,
     ]; //TODO: Add more scenarios and make them more reusable
 
     terminal = await theiaApp.openTerminal(TheiaTerminal);
