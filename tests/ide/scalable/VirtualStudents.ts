@@ -45,7 +45,7 @@ const deterministic: boolean = process.env.DETERMINISTIC
  * This function is used to simulate a virtual student in the IDE for the load tests.
  * @param page The page expects Theia to be loaded and the user to be logged in
  */
-export async function virtualStudent(page: Page, test) {
+export async function virtualStudent(page: Page, test: any) {
   const { step } = test;
   console.log("Starting virtual student");
 
@@ -67,7 +67,11 @@ export async function virtualStudent(page: Page, test) {
   await step("Cloning the repository", async () => {
     terminal = await theiaApp.openTerminal(TheiaTerminal);
     await terminal.submit("git clone " + loadRepositoryURL);
-    await sleep(5000);
+    let output = await terminal.contents();
+    while (!output.includes("Resolving deltas: 100% (1/1), done.")) {
+      await sleep(1000);
+      output = await terminal.contents();
+    }
     await terminal.close();
   });
 

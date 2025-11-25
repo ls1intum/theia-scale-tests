@@ -82,13 +82,13 @@ export class IDEPage {
     const terminal = await this.theiaApp.openTerminal(TheiaTerminal);
     await terminal.submit(`mkdir ${workspacePath}`);
     await this.page.goto(this.getWorkspaceURL(workspacePath));
-    await this.page.reload();
+    await this.reloadUntilReady();
     await this.waitForReady();
   }
 
   async openWorkspace(workspacePath: string): Promise<void> {
     await this.page.goto(this.getWorkspaceURL(workspacePath));
-    await this.page.reload();
+    await this.reloadUntilReady();
     await this.waitForReady;
   }
 
@@ -116,5 +116,19 @@ export class IDEPage {
       url = url.slice(0, -1);
     }
     return url.split("/#")[0] + `/#/home/project/${workspacePath}`;
+  }
+
+  async reloadUntilReady(): Promise<void> {
+    for (let i = 0; i < 3; i++) {
+      await this.page.reload();
+      try {
+        await Promise.race([
+          this.waitForReady(),
+          this.page.waitForTimeout(10_000).then(() => { throw new Error("timeout"); })
+        ]);        
+        return;
+      } catch (_) {}
+    }
+    throw new Error("waitForReady failed after 3 reloads");
   }
 }
